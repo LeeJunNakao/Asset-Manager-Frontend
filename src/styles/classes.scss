@@ -1,0 +1,49 @@
+@import "./colors.scss";
+
+
+.gray-bg {
+    background-color: $gray;
+    color: white;
+
+    &:active {
+        background-color: black;
+        color: $gray;
+    }
+}
+
+.gray-light-bg {
+    background-color: $gray-light;
+    color: black;
+
+    &:active {
+        background-color: $gray;
+        color: $gray-light;
+    }
+}
+
+.black-bg {
+    background-color: black;
+    color: white;
+
+    &:active {
+        background-color: white;
+        color: black;
+    }
+}
+
+.no-border {
+    border: none;
+}
+
+.transparent-border {
+    border: 1px solid transparent;
+}
+
+.black-border {
+    border: 1px solid black;
+}
+
+.message-error {
+    font-size: 10px;
+    color: red;
+}
