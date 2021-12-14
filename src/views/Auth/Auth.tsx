@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
+import RecoverPassword from "./RecoverPassword/RecoverPassword";
 import Button from "components/buttons/Button/Button";
 import "./Auth.scss";
+import LoadingIcon from "components/icons/Loading";
 
 function Auth() {
     const [form, setForm] = useState("login")
@@ -12,7 +14,7 @@ function Auth() {
         if(form === "login") {
             setButtonText("Register")
         }
-        if(form === "register") {
+        if(form === "register" || form === "recover") {
             setButtonText("Login")
         }
     }, [form])
@@ -21,7 +23,7 @@ function Auth() {
         if(form === "login") {
             setForm("register")
         }
-        if(form === "register") {
+        if(form === "register" || form === "recover") {
             setForm("login")
         }
     }
@@ -31,13 +33,16 @@ function Auth() {
             <div className="auth-form">
                 <div className="logo">
                     <span>Asset Manager</span>
-                </div>
+                </div>   
                 <main>  
                     {
-                        form === "login" && <Login />
+                        form === "login" && <Login setForm={setForm} />
                     }
                     {
                         form === "register" && <Register />
+                    }
+                    {
+                        form === "recover" && <RecoverPassword />
                     }
                     <Button text={buttonText} color={"gray-light"} onClick={handleClick} />
                 </main>

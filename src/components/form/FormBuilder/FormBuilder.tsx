@@ -1,11 +1,10 @@
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
-
 import Input from "components/inputs/Input/Input";
 import { InputConfig } from "components/inputs/protocols";
 import Button from "components/buttons/Button/Button";
 import { generateFormErrors, updateFormErrors } from "utils/form/adapters";
 import { validator } from "utils/form/validator";
-
+import Loading from "components/icons/Loading";
 
 export interface FormErrors {
     [field: string]: {
@@ -21,9 +20,11 @@ export interface FormData {
 
 interface FormProps {
     formData: FormData;
-    onSubmit: (args?: any) => void;
+    formError?: string;
+    onSubmit?: (args?: any) => void;
     btnColor?: string;
-    setErrors?:  Dispatch<SetStateAction<FormErrors>>
+    setErrors?:  Dispatch<SetStateAction<FormErrors>>;
+    loading?: boolean;
 }
 
 const inferInput = (property: InputConfig): any => {
@@ -51,17 +52,21 @@ function FormBuilder(props: FormProps) {
         return (<Component config={p} setContent={p.setState} key={idx.toString()} label={p.label} error={error} errorMessage={errorMessaqge}></Component>)
     })
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         const result = validator(formData.properties)
-        updateFormErrors(result, setErrors)
-        props.onSubmit();
+        await updateFormErrors(result, setErrors)
+        if(props.onSubmit) props.onSubmit();
     }
 
     const Form = (
         <div className="form-component-wrapper">
             <>{buildedForm}</>
+            <span className="message-error">{props.formError}</span>
             <div className="buttons-wrapper">
-                <Button text="Submit" onClick={onSubmit} color={props.btnColor || "black"} />
+                {
+                    props.loading ? <Loading /> : <Button text="Submit" onClick={onSubmit} color={props.btnColor || "black"} />
+                }
+                
             </div>
         </div>
     )

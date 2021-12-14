@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import { register } from "http-services/auth"
 import FormBuilder, { FormData } from "components/form/FormBuilder/FormBuilder";
 import { InputConfig } from "components/inputs/protocols";
 import { setLogin } from "store/auth";
-import { generateFormErrors, updateFormErrors } from "utils/form/adapters";
-import { validator } from "utils/form/validator";
+import { isFormvalid } from "utils/form/adapters";
+import { ValidationType } from "utils/form/validator/protocols";
+
 
 function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
+    const [shouldSubmit, setShouldSubmit] = useState(false);
+    const [responseError, setResponseError] = useState("");
+    const [awaitingResponse, setAwaitingResponse] = useState(false);
     
     const [formErrors, setErrors] = useState({});
 
@@ -41,7 +45,8 @@ function Register() {
                 state: email,
                 setState: setEmail,
                 validation: {
-                    required: true
+                    required: true,
+                    type: ValidationType.EMAIL
                 }
             },
             {
@@ -52,7 +57,8 @@ function Register() {
                 state: password,
                 setState: setPassword,
                 validation: {
-                    required: true
+                    required: true,
+                    type: ValidationType.PASSWORD
                 }
             },
             {
@@ -70,21 +76,29 @@ function Register() {
         ]
     }
 
-    const onClick = async () => {
-        // try {
-        //     const { token } = await register({ name, email, password });
-        //     localStorage.setItem("access_token", token);
+    const submit = async () => {
+        try {
+            setAwaitingResponse(true);
+            const { token } = await register({ name, email, password });
+            localStorage.setItem("access_token", token);
 
-        //     dispatch(setLogin())
-        //     navigate("/")
-        // } catch (error) {
-        //     console.log("fail to login")
-        // }
+            dispatch(setLogin())
+            navigate("/")
+        } catch (error: any) {
+            setResponseError(error.response.data.message)
+            setAwaitingResponse(false)
+        }
     }
+
+    useEffect(() => {
+        if(shouldSubmit && isFormvalid(formErrors)) {
+            submit();
+        }
+    }, [formErrors])
 
     return (
         <div>
-            <FormBuilder formData={formData} onSubmit={onClick} btnColor={"black"} setErrors={setErrors} />
+            <FormBuilder formData={formData} btnColor={"black"} onSubmit={() => setShouldSubmit(true)} setErrors={setErrors} formError={responseError} loading={awaitingResponse} />
         </div>
 
 

@@ -1,0 +1,19 @@
+.loading-icon {
+    width: 25px;
+    height: 25px;
+    animation: rotate-icon 1s linear infinite;
+
+    @keyframes rotate-icon   {
+        0% {
+            transform: rotate(0);
+        }
+
+        50% {
+            transform: rotate(190deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}

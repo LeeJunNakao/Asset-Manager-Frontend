@@ -1,6 +1,6 @@
 import { InputConfig } from "components/inputs/protocols";
 
-enum ValidationType { 
+export enum ValidationType { 
     EMAIL = "email",
     PASSWORD = "password",
 }

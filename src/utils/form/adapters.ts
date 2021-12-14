@@ -10,8 +10,12 @@ export const generateFormErrors = (names: string[]): FormErrors => {
     return Object.fromEntries(entries);
 }
 
-export const updateFormErrors = (validationResult: ValidationPipeArg[], setFormError: Dispatch<SetStateAction<FormErrors>>) => {
+export const updateFormErrors = async (validationResult: ValidationPipeArg[], setFormError: Dispatch<SetStateAction<FormErrors>>) => {
     const formDataEntries = validationResult.map(result => [result.item.title, result.result]);
     const formData: FormErrors = Object.fromEntries(formDataEntries);
-    setFormError(formData);
+    await setFormError(formData);
 };
+
+export const isFormvalid = (formErrors: FormErrors): boolean => {
+    return Object.values(formErrors).every(i => i.error === false)
+}

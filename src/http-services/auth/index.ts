@@ -11,8 +11,16 @@ type RegisterData = {
     password: string;
 }
 
+type RecoverData = {
+    email: string
+}
+
 type LoginResponse = {
     token: string
+}
+
+type RecoverResponse = {
+    message: string
 }
 
 
@@ -23,5 +31,10 @@ export const login = async (data: LoginData): Promise<LoginResponse> => {
 
 export const register = async (data: RegisterData): Promise<LoginResponse> => {
     const response = await authClient.post("/signup", data);
+    return response.data;
+}
+
+export const recoverPassword = async (data: RecoverData): Promise<RecoverResponse> => {
+    const response = await authClient.post("/recover-password", data);
     return response.data;
 }
