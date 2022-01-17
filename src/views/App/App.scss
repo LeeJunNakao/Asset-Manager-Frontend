@@ -12,3 +12,13 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.icon {
+    &:hover {
+        cursor: pointer;
+    }
+
+    &:active{
+        color: gray;
+    }
+}

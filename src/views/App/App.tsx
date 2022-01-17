@@ -3,6 +3,7 @@ import Auth from "views/Auth/Auth";
 import "./App.scss";
 import { RequireAuth } from "components/auth/RequireAuth";
 import Home from "views/Home/Home";
+import Asset from "views/Asset/Asset";
 
 function App() {  
   return (
@@ -14,6 +15,11 @@ function App() {
             <Home />
           </RequireAuth>
         }></Route>
+        <Route path="/asset" element={
+          <RequireAuth>
+            <Asset />
+          </RequireAuth>
+        } />
 
       </Routes>
     </div>

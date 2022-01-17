@@ -1,57 +1,57 @@
-import { useEffect, useState } from "react";
-import FormBuilder, { FormData } from "components/form/FormBuilder/FormBuilder";
-import { InputConfig } from "components/inputs/protocols";
-import { ValidationType } from "utils/form/validator/protocols";
-import { recoverPassword } from "http-services/auth"
-import { isFormvalid } from "utils/form/adapters";
-
+import { useState } from 'react';
+import FormBuilder from 'components/form/FormBuilder/FormBuilder';
+import {
+  Payload,
+  InputConfig,
+  ValidationType,
+} from 'components/form/FormBuilder/protocols';
+import { recoverPassword } from 'http-services/auth';
 
 function RecovePassword() {
-    const [email, setEmail] = useState("");
-    const [formErrors, setFormErrors] = useState({});
-    const [shouldSubmit, setShouldSubmit] = useState(false);
-    const [responseError, setResponseError] = useState("");
-    const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [responseError, setResponseError] = useState('');
+  const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [payload, setPayload] = useState({} as Payload);
 
-    const formData: FormData = {
-        title: "Login",
-        properties: [
-            {
-                title: "email",
-                label: "Email",
-                type: "text",
-                inputStyle: "input" as InputConfig["inputStyle"],
-                state: email,
-                setState: setEmail,
-                validation: {
-                    required: true,
-                    type: ValidationType.EMAIL
-                }
-            },         
-        ]
+  const formData = {
+    title: 'Login',
+    properties: [
+      {
+        title: 'email',
+        label: 'Email',
+        type: 'text',
+        inputStyle: 'input' as InputConfig['inputStyle'],
+        validation: {
+          required: true,
+          type: ValidationType.EMAIL,
+        },
+      },
+    ],
+  };
+
+  const submit = async () => {
+    try {
+      setAwaitingResponse(true);
+      const { email } = payload;
+      await recoverPassword({ email });
+    } catch (error: any) {
+      setResponseError(error.response.data.message);
+    } finally {
+      setAwaitingResponse(false);
     }
-    
-    const submit = async () => {
-        try {
-            setAwaitingResponse(true);
-            await recoverPassword({ email });
-        } catch (error: any) {
-            setResponseError(error.response.data.message)
-        } finally {
-            setAwaitingResponse(false);
-        }
-    }
+  };
 
-    useEffect(() => {
-        if(shouldSubmit && isFormvalid(formErrors)) submit();
-    }, [formErrors])
-
-
-    return (
-        <div>
-            <FormBuilder formData={formData} onSubmit={() => setShouldSubmit(true)}  setErrors={setFormErrors} formError={responseError} btnColor={"black"} loading={awaitingResponse} />
-        </div>
-    )
+  return (
+    <div>
+      <FormBuilder
+        formData={formData}
+        formError={responseError}
+        btnColor={'black'}
+        loading={awaitingResponse}
+        setPayload={setPayload}
+        onSubmit={submit}
+      />
+    </div>
+  );
 }
 
-export default RecovePassword
+export default RecovePassword;

@@ -4,49 +4,44 @@ import Register from "./Register/Register";
 import RecoverPassword from "./RecoverPassword/RecoverPassword";
 import Button from "components/buttons/Button/Button";
 import "./Auth.scss";
-import LoadingIcon from "components/icons/Loading";
+import PageContent from "components/page-content/PageContent";
 
 function Auth() {
     const [form, setForm] = useState("login")
     const [buttonText, setButtonText] = useState("Register")
-    
+
     useEffect(() => {
-        if(form === "login") {
+        if (form === "login") {
             setButtonText("Register")
         }
-        if(form === "register" || form === "recover") {
+        if (form === "register" || form === "recover") {
             setButtonText("Login")
         }
     }, [form])
 
     const handleClick = () => {
-        if(form === "login") {
+        if (form === "login") {
             setForm("register")
         }
-        if(form === "register" || form === "recover") {
+        if (form === "register" || form === "recover") {
             setForm("login")
         }
     }
-    
+
     return (
         <div id="auth-page">
-            <div className="auth-form">
-                <div className="logo">
-                    <span>Asset Manager</span>
-                </div>   
-                <main>  
-                    {
-                        form === "login" && <Login setForm={setForm} />
-                    }
-                    {
-                        form === "register" && <Register />
-                    }
-                    {
-                        form === "recover" && <RecoverPassword />
-                    }
-                    <Button text={buttonText} color={"gray-light"} onClick={handleClick} />
-                </main>
-            </div>
+            <PageContent text="Asset Manager">
+                {
+                    form === "login" && <Login setForm={setForm} />
+                }
+                {
+                    form === "register" && <Register />
+                }
+                {
+                    form === "recover" && <RecoverPassword />
+                }
+                <Button text={buttonText} color={"gray-light"} onClick={handleClick} />
+            </PageContent>
         </div>
     );
 }

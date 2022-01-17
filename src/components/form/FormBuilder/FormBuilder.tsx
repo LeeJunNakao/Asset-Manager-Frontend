@@ -1,77 +1,77 @@
-import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
-import Input from "components/inputs/Input/Input";
-import { InputConfig } from "components/inputs/protocols";
-import Button from "components/buttons/Button/Button";
-import { generateFormErrors, updateFormErrors } from "utils/form/adapters";
-import { validator } from "utils/form/validator";
-import Loading from "components/icons/Loading";
-
-export interface FormErrors {
-    [field: string]: {
-        error: boolean;
-        message: string;
-    }
-}
-
-export interface FormData {
-    title: string;
-    properties: InputConfig[];
-}
-
-interface FormProps {
-    formData: FormData;
-    formError?: string;
-    onSubmit?: (args?: any) => void;
-    btnColor?: string;
-    setErrors?:  Dispatch<SetStateAction<FormErrors>>;
-    loading?: boolean;
-}
-
-const inferInput = (property: InputConfig): any => {
-    const inputTypes = {
-        input: Input
-    }
-
-    return inputTypes[property.inputStyle] || Input;
-}
+import { useState, useEffect } from 'react';
+import Button from 'components/buttons/Button/Button';
+import {
+  generateFormErrors,
+  isFormvalid,
+  updateFormErrors,
+} from 'utils/form/adapters';
+import { validator } from 'utils/form/validator';
+import Loading from 'components/icons/Loading';
+import { FormProps, FieldsData, FormData, InputConfig } from './protocols';
+import { inferInput, formatFormData } from './fns';
 
 function FormBuilder(props: FormProps) {
-    const formData = props.formData;
+  const [fieldsData, setFieldsData] = useState({} as FieldsData);
+  useEffect(() => {
+    props.setPayload(fieldsData);
+  }, [fieldsData]);
 
-    const [formErrors, setErrors] = useState(generateFormErrors(formData.properties.map(i => i.title)));
+  const formData: FormData<InputConfig> = formatFormData(
+    props,
+    fieldsData,
+    setFieldsData
+  );
 
-    useEffect(() => {
-        if (props.setErrors) props.setErrors(formErrors)
-    }, [formErrors])
+  const [formErrors, setErrors] = useState(
+    generateFormErrors(formData.properties.map((i) => i.title))
+  );
 
-    const buildedForm = formData.properties.map((p, idx) => {
-        const Component = inferInput(p);
-        const error = formErrors[p.title].error;
-        const errorMessaqge = formErrors[p.title].message
+  useEffect(() => {
+    if (props.setErrors) props.setErrors(formErrors);
+  }, [formErrors]);
 
-        return (<Component config={p} setContent={p.setState} key={idx.toString()} label={p.label} error={error} errorMessage={errorMessaqge}></Component>)
-    })
+  const buildedForm = formData.properties.map((p, idx) => {
+    const Component = inferInput(p as InputConfig);
+    const error = formErrors[p.title].error;
+    const errorMessaqge = formErrors[p.title].message;
 
-    const onSubmit = async () => {
-        const result = validator(formData.properties)
-        await updateFormErrors(result, setErrors)
-        if(props.onSubmit) props.onSubmit();
-    }
+    return (
+      <Component
+        config={p}
+        setContent={p.setState}
+        key={idx.toString()}
+        label={p.label}
+        error={error}
+        errorMessage={errorMessaqge}
+      ></Component>
+    );
+  });
 
-    const Form = (
-        <div className="form-component-wrapper">
-            <>{buildedForm}</>
-            <span className="message-error">{props.formError}</span>
-            <div className="buttons-wrapper">
-                {
-                    props.loading ? <Loading /> : <Button text="Submit" onClick={onSubmit} color={props.btnColor || "black"} />
-                }
-                
-            </div>
-        </div>
-    )
+  const onSubmit = async () => {
+    const result = validator(formData.properties);
+    const errors = updateFormErrors(result, setErrors);
+    if (props.onSubmit && isFormvalid(errors)) props.onSubmit();
+  };
 
-    return (<>{Form}</>)
+  const Form = (
+    <div className="form-component-wrapper">
+      <>{buildedForm}</>
+      <span className="message-error">{props.formError}</span>
+      <div className="buttons-wrapper">
+        {props.loading ? (
+          <Loading />
+        ) : (
+          <Button
+            text="Submit"
+            onClick={onSubmit}
+            color={props.btnColor || 'black'}
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  return <>{Form}</>;
 }
 
 export default FormBuilder;
