@@ -12,6 +12,7 @@ import { inferInput, formatFormData } from './fns';
 
 function FormBuilder(props: FormProps) {
   const [fieldsData, setFieldsData] = useState({} as FieldsData);
+
   useEffect(() => {
     props.setPayload(fieldsData);
   }, [fieldsData]);

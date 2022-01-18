@@ -1,4 +1,5 @@
 import react, { ReactElement } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './PageContent.scss';
 
 type MenuItem = {
@@ -15,7 +16,7 @@ interface PropsType {
 
 function PageContent(props: PropsType) {
   const menu = props.menu?.map((menuItem: any) => (
-    <div className="item" onClick={menuItem.onClick}>
+    <div className="item" onClick={menuItem.onClick} key={uuidv4()}>
       <menuItem.icon />
       <span>{menuItem.text}</span>
     </div>

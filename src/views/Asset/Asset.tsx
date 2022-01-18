@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageContent from 'components/page-content/PageContent';
@@ -7,13 +8,14 @@ import { Payload, InputConfig } from 'components/form/FormBuilder/protocols';
 import { SiAddthis } from 'react-icons/si';
 import { ImHome } from 'react-icons/im';
 import { VscListFlat } from 'react-icons/vsc';
-import { assets } from './assets-data';
+import { selectAssets } from 'store/asset';
 
 function Asset() {
   const [payload, setPayload] = useState({} as Payload);
   const [mode, setMode] = useState('list');
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [responseError, setResponseError] = useState('');
+  const assets = useSelector(selectAssets);
 
   const formData = {
     title: 'Asset',

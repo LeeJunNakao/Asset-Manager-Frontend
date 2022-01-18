@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login } from 'http-services/auth';
+import { login, validateToken } from 'http-services/auth';
 import FormBuilder from 'components/form/FormBuilder/FormBuilder';
 import {
   Payload,
@@ -28,7 +28,9 @@ function Login(props: LoginProps) {
       setAwaitingResponse(true);
       const { email, password } = payload;
       const { token } = await login({ email, password });
+      const { id } = await validateToken({ token });
       localStorage.setItem('access_token', token);
+      localStorage.setItem('user_id', String(id));
       dispatch(setLogin());
       navigate('/');
     } catch (error: any) {
