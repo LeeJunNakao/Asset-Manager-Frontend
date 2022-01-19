@@ -2,6 +2,7 @@ import { HiCurrencyDollar } from 'react-icons/hi';
 import { RiStockLine } from 'react-icons/ri';
 import { BsFillCollectionFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+
 import './Home.scss';
 
 function Home() {

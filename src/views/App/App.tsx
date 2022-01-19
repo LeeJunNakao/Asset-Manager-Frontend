@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import Auth from 'views/Auth/Auth';
@@ -8,14 +8,21 @@ import Home from 'views/Home/Home';
 import Asset from 'views/Asset/Asset';
 import { getAsset } from 'http-services/asset';
 import { setAssets } from 'store/asset';
+import PageLoading from 'components/page-loading/PageLoading';
 
 function App() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchAssets = async () => {
-      const response = await getAsset();
-      dispatch(setAssets(response));
+      try {
+        setIsLoading(true);
+        const response = await getAsset();
+        dispatch(setAssets(response));
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchAssets();
@@ -23,25 +30,29 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route
-          path="/"
-          element={
-            <RequireAuth>
-              <Home />
-            </RequireAuth>
-          }
-        ></Route>
-        <Route
-          path="/asset"
-          element={
-            <RequireAuth>
-              <Asset />
-            </RequireAuth>
-          }
-        />
-      </Routes>
+      {isLoading ? (
+        <PageLoading />
+      ) : (
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          ></Route>
+          <Route
+            path="/asset"
+            element={
+              <RequireAuth>
+                <Asset />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 }
