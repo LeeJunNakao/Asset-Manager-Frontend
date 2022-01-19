@@ -9,6 +9,7 @@ import { SiAddthis } from 'react-icons/si';
 import { ImHome } from 'react-icons/im';
 import { VscListFlat } from 'react-icons/vsc';
 import { selectAssets } from 'store/asset';
+import MessageBox from 'components/cards/MessageBox';
 
 function Asset() {
   const [payload, setPayload] = useState({} as Payload);
@@ -61,19 +62,27 @@ function Asset() {
     },
   ];
 
+  const forms =
+    mode === 'create' ? (
+      <FormBuilder
+        formData={formData}
+        onSubmit={submit}
+        loading={awaitingResponse}
+        formError={responseError}
+        setPayload={setPayload}
+      />
+    ) : (
+      mode === 'list' && <Table data={assets} exclude={['id', 'user_id']} />
+    );
+
   return (
     <div id="asset-page" className="page-wrapper">
       <PageContent text="Asset" menu={menu}>
-        {mode === 'create' && (
-          <FormBuilder
-            formData={formData}
-            onSubmit={submit}
-            loading={awaitingResponse}
-            formError={responseError}
-            setPayload={setPayload}
-          />
+        {mode === 'list' && !assets.length ? (
+          <MessageBox message="no item" />
+        ) : (
+          forms
         )}
-        {mode === 'list' && <Table data={assets} exclude={['id', 'user_id']} />}
       </PageContent>
     </div>
   );
