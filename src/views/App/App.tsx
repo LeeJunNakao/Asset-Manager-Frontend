@@ -9,10 +9,12 @@ import Asset from 'views/Asset/Asset';
 import Currency from 'views/Currency/Currency';
 import Portfolio from 'views/Portfolio/Portfolio';
 import { getAsset } from 'http-services/asset';
+import { getCurrency } from 'http-services/currency';
+import { getPortfolio } from 'http-services/portfolio';
 import { setAssets } from 'store/asset';
 import { setCurrencies } from 'store/currency';
+import { setPortfolios } from 'store/portfolio';
 import PageLoading from 'components/page-loading/PageLoading';
-import { getCurrency } from 'http-services/currency';
 
 function App() {
   const dispatch = useDispatch();
@@ -30,11 +32,17 @@ function App() {
       dispatch(setCurrencies(response));
     };
 
+    const fetchPortfolio = async () => {
+      const response = await getPortfolio();
+      dispatch(setPortfolios(response));
+    };
+
     if (authenticated) {
       try {
         setIsLoading(true);
         fetchAssets();
         fetchCurrency();
+        fetchPortfolio();
       } finally {
         setIsLoading(false);
       }

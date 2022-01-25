@@ -20,12 +20,12 @@ export interface ValidationPipeArg {
   item: InputConfig;
   result: ValidationResult;
 }
-type SelectOptions = {
+export type SelectOption = {
   value: string;
   label: string;
 };
 
-type Options = string[] | SelectOptions[];
+type Options = Array<string | SelectOption>;
 
 export interface InputConfig {
   title: string;

@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect } from 'react';
 import { InputConfig } from 'components/form/FormBuilder/protocols';
 import FormControl from '@mui/material/FormControl';
@@ -6,17 +7,36 @@ import MenuItem from '@mui/material/MenuItem';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
-import { SelectProp } from 'components/form/FormBuilder/protocols';
+import {
+  SelectProp,
+  SelectOption,
+} from 'components/form/FormBuilder/protocols';
 import './style.scss';
 
 function Select(props: SelectProp) {
   const [selectedValue, setContent] = useState<SelectProp['options']>([]);
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+
+  useEffect(() => {
+    const labels = selectedValue.map((value): string => {
+      if (typeof props.options[0] === 'string') return value as string;
+
+      const item = props.options.find(
+        (o: any) => o.value === value
+      ) as SelectOption;
+
+      return item.label;
+    });
+
+    setSelectedLabels(labels);
+  }, [selectedValue]);
 
   const handleChange = (event: any) => {
     const {
       target: { value },
     } = event;
     setContent(value);
+    props.setContent(value);
   };
 
   useEffect(() => {
@@ -36,18 +56,15 @@ function Select(props: SelectProp) {
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((item) => (
-                <Chip
-                  key={typeof item === 'string' ? item : item.value}
-                  label={typeof item === 'string' ? item : item.value}
-                />
+              {selectedLabels.map((item) => (
+                <Chip key={uuidv4()} label={item} />
               ))}
             </Box>
           )}
         >
           {(props.options || []).map((option) => (
             <MenuItem
-              key={typeof option === 'string' ? option : option.value}
+              key={uuidv4()}
               value={typeof option === 'string' ? option : option.value}
             >
               <div className="item">

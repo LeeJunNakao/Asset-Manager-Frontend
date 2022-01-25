@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageContent from 'components/page-content/PageContent';
 import FormBuilder from 'components/form/FormBuilder/FormBuilder';
@@ -17,6 +17,9 @@ import {
 interface Props {
   title: string;
   formData: FormData<InputConfigProp>;
+  table?: {
+    exclude?: string[];
+  };
   service: {
     createItem: (i: any) => Promise<Payload>;
     editItem: (i: any) => Promise<Payload>;
@@ -116,7 +119,7 @@ export function generatePage(props: Props) {
             data={items as Payload}
             onEdit={handleEdit}
             onDelete={onDelete}
-            exclude={['id', 'user_id']}
+            exclude={props.table?.exclude || ['id', 'user_id']}
           />
         )
       );

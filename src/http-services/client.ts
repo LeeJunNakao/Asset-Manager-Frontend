@@ -57,7 +57,6 @@ entityAxios.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log('!!!!!!!!!!!!!!!!!!', error.response.status);
     return Promise.reject(error);
   }
 );

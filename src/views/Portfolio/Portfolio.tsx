@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { InputConfig } from 'components/form/FormBuilder/protocols';
 import generatePage from 'utils/page/generate-entity-page';
 import {
@@ -11,43 +12,53 @@ import {
   updatePortfolio,
   removePortfolio,
 } from 'store/portfolio';
+import { selectAssets } from 'store/asset';
+import { Asset } from 'entities/asset';
 
-const formData = {
-  title: 'Asset',
-  properties: [
-    {
-      title: 'name',
-      label: 'Name',
-      type: 'text',
-      inputStyle: 'input' as InputConfig['inputStyle'],
-      validation: {
-        required: true,
+function Portfolio() {
+  const formData = {
+    title: 'Asset',
+    properties: [
+      {
+        title: 'name',
+        label: 'Name',
+        type: 'text',
+        inputStyle: 'input' as InputConfig['inputStyle'],
+        validation: {
+          required: true,
+        },
       },
-    },
-    {
-      title: 'assets_ids',
-      label: 'Assets',
-      type: 'text',
-      inputStyle: 'select' as InputConfig['inputStyle'],
-      options: ['james', 'wilton'],
-    },
-  ],
-};
+      {
+        title: 'assets_ids',
+        label: 'Assets',
+        type: 'text',
+        inputStyle: 'select' as InputConfig['inputStyle'],
+        options: useSelector(selectAssets).map((asset: Asset) => ({
+          label: asset.code,
+          value: asset.id,
+        })),
+      },
+    ],
+  };
 
-const Portfolio = generatePage({
-  title: 'Portfolio',
-  formData: formData,
-  service: {
-    createItem: createPortfolio,
-    editItem: editPortfolio,
-    deleteItem: deletePortfolio,
-  },
-  store: {
-    selectItems: selectPortfolios,
-    addItem: addPortfolio,
-    updateItem: updatePortfolio,
-    removeItem: removePortfolio,
-  },
-});
+  return generatePage({
+    title: 'Portfolio',
+    formData: formData,
+    table: {
+      exclude: ['id', 'user_id', 'assets_ids'],
+    },
+    service: {
+      createItem: createPortfolio,
+      editItem: editPortfolio,
+      deleteItem: deletePortfolio,
+    },
+    store: {
+      selectItems: selectPortfolios,
+      addItem: addPortfolio,
+      updateItem: updatePortfolio,
+      removeItem: removePortfolio,
+    },
+  })();
+}
 
 export default Portfolio;
