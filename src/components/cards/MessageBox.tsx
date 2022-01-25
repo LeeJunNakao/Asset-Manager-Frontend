@@ -1,4 +1,3 @@
-import react from 'react';
 import './MessageBox.scss';
 
 interface Props {

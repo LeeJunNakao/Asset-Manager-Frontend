@@ -1,4 +1,9 @@
-import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  AxiosResponse,
+} from 'axios';
 
 function makeService<T, U>(client: AxiosInstance) {
   return {
@@ -37,6 +42,14 @@ const entityAxios = Axios.create({
     user_id: localStorage.getItem('user_id') || '',
     access_token: localStorage.getItem('access_token') || '',
   },
+});
+
+entityAxios.interceptors.request.use(function (config: AxiosRequestConfig) {
+  const token = localStorage.getItem('access_token') as string;
+  const userId = localStorage.getItem('user_id') as string;
+  (config.headers as AxiosRequestHeaders).access_token = token;
+  (config.headers as AxiosRequestHeaders).user_id = userId;
+  return config;
 });
 
 export const authClient = makeService(authAxios);

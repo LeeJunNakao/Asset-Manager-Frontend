@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import Auth from 'views/Auth/Auth';
 import './App.scss';
@@ -13,6 +13,7 @@ import PageLoading from 'components/page-loading/PageLoading';
 function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const authenticated = useSelector((state: any) => state.auth.authenticated);
 
   useEffect(() => {
     const fetchAssets = async () => {
@@ -25,8 +26,10 @@ function App() {
       }
     };
 
-    fetchAssets();
-  }, []);
+    if (authenticated) {
+      fetchAssets();
+    }
+  }, [authenticated]);
 
   return (
     <div className="App">

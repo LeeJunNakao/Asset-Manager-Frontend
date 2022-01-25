@@ -15,7 +15,7 @@ function FormBuilder(props: FormProps) {
 
   useEffect(() => {
     props.setPayload(fieldsData);
-  }, [fieldsData]);
+  }, [fieldsData, props]);
 
   const formData: FormData<InputConfig> = formatFormData(
     props,
@@ -29,7 +29,7 @@ function FormBuilder(props: FormProps) {
 
   useEffect(() => {
     if (props.setErrors) props.setErrors(formErrors);
-  }, [formErrors]);
+  }, [formErrors, props]);
 
   const buildedForm = formData.properties.map((p, idx) => {
     const Component = inferInput(p as InputConfig);
