@@ -1,6 +1,6 @@
-export type Asset = {
+export type Currency = {
   id: number;
   code: string;
   name: string;
-  user_id: number;
+  decimal: number;
 };
