@@ -10,6 +10,8 @@ interface TableData {
 interface TableProps {
   data: TableData;
   exclude?: String[];
+  onDelete?: (data: TableData) => any;
+  onEdit?: (data: TableData) => any;
 }
 
 export default function Table(props: TableProps) {
@@ -37,8 +39,14 @@ export default function Table(props: TableProps) {
         <div key={uuidv4()}>{item[h]}</div>
       ))}
       <div className="actions">
-        <FaTrash className="icon" />
-        <MdModeEditOutline className="icon" />
+        <FaTrash
+          className="icon"
+          onClick={() => props.onDelete && props.onDelete(item)}
+        />
+        <MdModeEditOutline
+          className="icon"
+          onClick={() => props.onEdit && props.onEdit(item)}
+        />
       </div>
     </div>
   ));

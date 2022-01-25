@@ -55,6 +55,7 @@ export interface FormProps {
   formData: FormData<InputConfigProp>;
   formError?: string;
   btnColor?: string;
+  filledData?: Payload;
   setPayload: Dispatch<SetStateAction<Payload>>;
   onSubmit?: (args?: any) => void;
   setErrors?: Dispatch<SetStateAction<FormErrors>>;

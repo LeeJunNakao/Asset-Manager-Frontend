@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageContent from 'components/page-content/PageContent';
@@ -8,15 +8,20 @@ import { Payload, InputConfig } from 'components/form/FormBuilder/protocols';
 import { SiAddthis } from 'react-icons/si';
 import { ImHome } from 'react-icons/im';
 import { VscListFlat } from 'react-icons/vsc';
-import { selectAssets } from 'store/asset';
+import { selectAssets, updateAsset, addAsset, removeAsset } from 'store/asset';
 import MessageBox from 'components/cards/MessageBox';
+import { editAsset, createAsset, deleteAsset } from 'http-services/asset';
+import { Asset as AssetEntity } from 'entities/asset';
 
 function Asset() {
   const [payload, setPayload] = useState({} as Payload);
   const [mode, setMode] = useState('list');
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [responseError, setResponseError] = useState('');
+  const [selectedItem, setSelectedItem] = useState({});
   const assets = useSelector(selectAssets);
+
+  const dispatch = useDispatch();
 
   const formData = {
     title: 'Asset',
@@ -42,8 +47,12 @@ function Asset() {
     ],
   };
 
-  const submit = () => {
-    console.log(payload);
+  const create = async () => {
+    try {
+      const response = await createAsset(payload as Omit<AssetEntity, 'id'>);
+      dispatch(addAsset(response));
+      setMode('list');
+    } catch (error) {}
   };
 
   const navigate = useNavigate();
@@ -56,23 +65,67 @@ function Asset() {
     },
     {
       icon: mode === 'create' ? VscListFlat : SiAddthis,
-      text: mode === 'create' ? 'list' : 'create',
+      text: mode === 'create' || mode === 'edit' ? 'list' : 'create',
       onClick:
-        mode === 'create' ? () => setMode('list') : () => setMode('create'),
+        mode === 'create' || mode === 'edit'
+          ? () => setMode('list')
+          : () => setMode('create'),
     },
   ];
+
+  const handleEdit = (data: Payload) => {
+    setSelectedItem(data);
+    setMode('edit');
+  };
+
+  const onEdit = async () => {
+    try {
+      const value = {
+        ...selectedItem,
+        ...payload,
+      };
+
+      const response = await editAsset(value as AssetEntity);
+
+      dispatch(updateAsset(response));
+      setMode('list');
+    } catch (error) {}
+  };
+
+  const onDelete = async (data: Payload) => {
+    try {
+      await deleteAsset(data.id);
+      dispatch(removeAsset(data));
+    } catch (error) {}
+  };
 
   const forms =
     mode === 'create' ? (
       <FormBuilder
         formData={formData}
-        onSubmit={submit}
+        onSubmit={create}
+        loading={awaitingResponse}
+        formError={responseError}
+        setPayload={setPayload}
+      />
+    ) : mode === 'edit' ? (
+      <FormBuilder
+        formData={formData}
+        filledData={selectedItem}
+        onSubmit={onEdit}
         loading={awaitingResponse}
         formError={responseError}
         setPayload={setPayload}
       />
     ) : (
-      mode === 'list' && <Table data={assets} exclude={['id', 'user_id']} />
+      mode === 'list' && (
+        <Table
+          data={assets}
+          onEdit={handleEdit}
+          onDelete={onDelete}
+          exclude={['id', 'user_id']}
+        />
+      )
     );
 
   return (

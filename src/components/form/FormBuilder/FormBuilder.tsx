@@ -34,7 +34,8 @@ function FormBuilder(props: FormProps) {
   const buildedForm = formData.properties.map((p, idx) => {
     const Component = inferInput(p as InputConfig);
     const error = formErrors[p.title].error;
-    const errorMessaqge = formErrors[p.title].message;
+    const errorMessage = formErrors[p.title].message;
+    const payload = props.filledData ? props.filledData[p.title] : '';
 
     return (
       <Component
@@ -43,7 +44,8 @@ function FormBuilder(props: FormProps) {
         key={idx.toString()}
         label={p.label}
         error={error}
-        errorMessage={errorMessaqge}
+        errorMessage={errorMessage}
+        data={payload}
       ></Component>
     );
   });

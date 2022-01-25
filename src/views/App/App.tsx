@@ -20,6 +20,7 @@ function App() {
       try {
         setIsLoading(true);
         const response = await getAsset();
+        console.log(response);
         dispatch(setAssets(response));
       } finally {
         setIsLoading(false);
