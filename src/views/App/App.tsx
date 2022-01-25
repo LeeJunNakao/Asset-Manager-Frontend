@@ -6,9 +6,12 @@ import './App.scss';
 import { RequireAuth } from 'components/auth/RequireAuth';
 import Home from 'views/Home/Home';
 import Asset from 'views/Asset/Asset';
+import Currency from 'views/Currency/Currency';
 import { getAsset } from 'http-services/asset';
 import { setAssets } from 'store/asset';
+import { setCurrencies } from 'store/currency';
 import PageLoading from 'components/page-loading/PageLoading';
+import { getCurrency } from 'http-services/currency';
 
 function App() {
   const dispatch = useDispatch();
@@ -17,18 +20,23 @@ function App() {
 
   useEffect(() => {
     const fetchAssets = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getAsset();
-        console.log(response);
-        dispatch(setAssets(response));
-      } finally {
-        setIsLoading(false);
-      }
+      const response = await getAsset();
+      dispatch(setAssets(response));
+    };
+
+    const fetchCurrency = async () => {
+      const response = await getCurrency();
+      dispatch(setCurrencies(response));
     };
 
     if (authenticated) {
-      fetchAssets();
+      try {
+        setIsLoading(true);
+        fetchAssets();
+        fetchCurrency();
+      } finally {
+        setIsLoading(false);
+      }
     }
   }, [authenticated]);
 
@@ -52,6 +60,14 @@ function App() {
             element={
               <RequireAuth>
                 <Asset />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/currency"
+            element={
+              <RequireAuth>
+                <Currency />
               </RequireAuth>
             }
           />
