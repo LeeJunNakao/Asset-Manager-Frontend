@@ -52,5 +52,15 @@ entityAxios.interceptors.request.use(function (config: AxiosRequestConfig) {
   return config;
 });
 
+entityAxios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    console.log('!!!!!!!!!!!!!!!!!!', error.response.status);
+    return Promise.reject(error);
+  }
+);
+
 export const authClient = makeService(authAxios);
 export const client = makeService(entityAxios);
