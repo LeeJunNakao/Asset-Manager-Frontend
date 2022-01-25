@@ -1,9 +1,20 @@
-import Input from 'components/inputs/Input/Input';
-import { FieldsData, FormProps, FormData, InputConfig } from './protocols';
+import React from 'react';
+import { Input, Select } from 'components/inputs';
+import {
+  FieldsData,
+  FormProps,
+  FormData,
+  InputConfig,
+  InputProp,
+  SelectProp,
+} from './protocols';
 
-export const inferInput = (property: InputConfig): any => {
+export const inferInput = (
+  property: InputConfig
+): React.FC<InputProp> | React.FC<SelectProp> => {
   const inputTypes = {
     input: Input,
+    select: Select,
   };
 
   return inputTypes[property.inputStyle] || Input;

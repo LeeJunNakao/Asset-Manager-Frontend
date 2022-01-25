@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Input.scss';
-import { InputConfig } from 'components/form/FormBuilder/protocols';
-
-interface InputProp {
-  label: string;
-  type?: string;
-  setContent: (value: string) => void;
-  config?: InputConfig;
-  error?: boolean;
-  errorMessage?: string;
-  data?: string;
-}
+import { InputProp } from 'components/form/FormBuilder/protocols';
 
 function Input(props: InputProp) {
   const [content, setContent] = useState('');

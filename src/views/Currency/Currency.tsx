@@ -47,7 +47,7 @@ const formData = {
 
 const Currency = generatePage({
   title: 'Currency',
-  selectItems: selectCurrencies,
+
   formData: formData,
   service: {
     createItem: createCurrency,
@@ -55,6 +55,7 @@ const Currency = generatePage({
     deleteItem: deleteCurrency,
   },
   store: {
+    selectItems: selectCurrencies,
     addItem: addCurrency,
     updateItem: updateCurrency,
     removeItem: removeCurrency,

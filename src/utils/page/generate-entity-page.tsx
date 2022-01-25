@@ -16,7 +16,6 @@ import {
 
 interface Props {
   title: string;
-  selectItems: any;
   formData: FormData<InputConfigProp>;
   service: {
     createItem: (i: any) => Promise<Payload>;
@@ -24,6 +23,7 @@ interface Props {
     deleteItem: (id: number) => Promise<void>;
   };
   store: {
+    selectItems: any;
     addItem: any;
     updateItem: any;
     removeItem: any;
@@ -37,7 +37,7 @@ export function generatePage(props: Props) {
     const [awaitingResponse, setAwaitingResponse] = useState(false);
     const [responseError, setResponseError] = useState('');
     const [selectedItem, setSelectedItem] = useState({});
-    const items = useSelector(props.selectItems) as Payload[];
+    const items = useSelector(props.store.selectItems) as Payload[];
 
     const dispatch = useDispatch();
     const navigate = useNavigate();

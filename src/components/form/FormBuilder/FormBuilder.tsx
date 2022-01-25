@@ -46,6 +46,7 @@ function FormBuilder(props: FormProps) {
         error={error}
         errorMessage={errorMessage}
         data={payload}
+        options={p.options || []}
       ></Component>
     );
   });

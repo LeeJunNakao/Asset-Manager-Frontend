@@ -7,6 +7,7 @@ import { RequireAuth } from 'components/auth/RequireAuth';
 import Home from 'views/Home/Home';
 import Asset from 'views/Asset/Asset';
 import Currency from 'views/Currency/Currency';
+import Portfolio from 'views/Portfolio/Portfolio';
 import { getAsset } from 'http-services/asset';
 import { setAssets } from 'store/asset';
 import { setCurrencies } from 'store/currency';
@@ -68,6 +69,14 @@ function App() {
             element={
               <RequireAuth>
                 <Currency />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/portfolio"
+            element={
+              <RequireAuth>
+                <Portfolio />
               </RequireAuth>
             }
           />

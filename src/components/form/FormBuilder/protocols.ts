@@ -20,19 +20,42 @@ export interface ValidationPipeArg {
   item: InputConfig;
   result: ValidationResult;
 }
+type SelectOptions = {
+  value: string;
+  label: string;
+};
+
+type Options = string[] | SelectOptions[];
 
 export interface InputConfig {
   title: string;
   label: string;
   type: string;
-  inputStyle: 'input';
+  inputStyle: 'input' | 'select';
   properties?: this;
   getState: () => any;
   setState: (state: any) => void;
   validation?: ValidationConfig;
+  options?: Options;
 }
 
 export type InputConfigProp = Omit<InputConfig, 'getState' | 'setState'>;
+
+export type InputProp = {
+  label: string;
+  type?: string;
+  setContent: (value: string) => void;
+  config?: InputConfig;
+  error?: boolean;
+  errorMessage?: string;
+  data?: string;
+};
+
+export interface SelectProp extends Omit<InputProp, 'data' | 'setContent'> {
+  options: Options;
+  data: Options;
+  setContent: (value: Options) => void;
+}
 
 export interface FormErrors {
   [field: string]: {

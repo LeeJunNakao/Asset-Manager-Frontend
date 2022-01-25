@@ -29,7 +29,6 @@ const formData = {
 
 const Asset = generatePage({
   title: 'Asset',
-  selectItems: selectAssets,
   formData: formData,
   service: {
     createItem: createAsset,
@@ -37,6 +36,7 @@ const Asset = generatePage({
     deleteItem: deleteAsset,
   },
   store: {
+    selectItems: selectAssets,
     addItem: addAsset,
     updateItem: updateAsset,
     removeItem: removeAsset,

@@ -1,0 +1,43 @@
+.MuiFormControl-root {
+    .MuiOutlinedInput-root {
+        height: 30px;
+    }
+    .MuiOutlinedInput-notchedOutline{
+        border-color:black !important;
+    }
+}
+
+
+ul {
+    li {
+        display: flex;
+        .unchecked-icon {
+            display: none;
+        }
+        .checked-icon {
+            display: none;
+        }   
+
+        &[aria-selected=true] {
+            .checked-icon {
+                display: flex;
+            }
+        }
+
+        &[aria-selected=false] {
+            .unchecked-icon {
+                display: flex;
+            }
+        }
+
+        .item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+
+            span {
+                margin-left: 10px;
+            }
+        }
+    }
+}  
