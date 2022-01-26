@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect } from 'react';
-import { InputConfig } from 'components/form/FormBuilder/protocols';
 import FormControl from '@mui/material/FormControl';
 import MaterialSelect from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -52,7 +51,7 @@ function Select(props: SelectProp) {
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
           value={selectedValue}
-          multiple
+          multiple={Boolean(props.type === 'multi')}
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

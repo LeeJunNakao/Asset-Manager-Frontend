@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Asset } from 'entities/asset';
+import { Asset, AssetEntryRequestPayload } from 'entities/asset';
 
 interface State {
   assets: Asset[];
+  assetEntries: AssetEntryRequestPayload;
 }
 
 export const assetSlice = createSlice({
   name: 'asset',
   initialState: {
     assets: [],
+    assetEntries: {},
   } as State,
   reducers: {
     setAssets: (state, action) => {
@@ -35,11 +37,45 @@ export const assetSlice = createSlice({
 
       state.assets = assets;
     },
+    setAssetEntries: (state, action) => {
+      state.assetEntries = action.payload;
+    },
+    addAssetEntry: (state, action) => {
+      const assetId = action.payload.asset_id;
+      const assetEntries = state.assetEntries[assetId];
+      if (assetEntries) assetEntries.push(action.payload);
+      else state.assetEntries[assetId] = [action.payload];
+    },
+    updateAssetEntry: (state, action) => {
+      const id = action.payload.id;
+      const assetId = action.payload.asset_id;
+      const assetEntries = state.assetEntries[assetId];
+      const index = assetEntries.findIndex((i) => i.id === id);
+
+      assetEntries.splice(index, 1, action.payload);
+    },
+    removeAssetEntry: (state, action) => {
+      const id = action.payload.id;
+      const assetId = action.payload.asset_id;
+      const assetEntries = state.assetEntries[assetId];
+      const index = assetEntries.findIndex((i) => i.id === id);
+
+      assetEntries.splice(index, 1);
+    },
   },
 });
 
 export const selectAssets = (state: any) => state.asset.assets;
+export const selectAssetEntries = (state: any) => state.asset.assetEntries;
 
-export const { setAssets, updateAsset, addAsset, removeAsset } =
-  assetSlice.actions;
+export const {
+  setAssets,
+  updateAsset,
+  addAsset,
+  removeAsset,
+  setAssetEntries,
+  addAssetEntry,
+  updateAssetEntry,
+  removeAssetEntry,
+} = assetSlice.actions;
 export default assetSlice.reducer;

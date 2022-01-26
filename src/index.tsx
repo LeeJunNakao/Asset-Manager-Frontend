@@ -1,17 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from 'react-redux'
-import store from "store/store";
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from 'store/store';
 import App from './views/App/App';
 import reportWebVitals from './reportWebVitals';
+import { setInterceptor } from 'http-services/interceptors';
+import { client } from 'http-services/client';
 
+setInterceptor(store, client.client());
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Provider store={store}>
-      <App />
+      <Provider store={store}>
+        <App />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>,

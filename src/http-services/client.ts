@@ -31,6 +31,7 @@ function makeService<T, U>(client: AxiosInstance) {
 const authAxios = Axios.create({
   baseURL: process.env.REACT_APP_AUTH_URL,
   headers: {
+    'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   },
 });
@@ -39,6 +40,8 @@ const entityAxios = Axios.create({
   baseURL: process.env.REACT_APP_ENTITITES_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     user_id: localStorage.getItem('user_id') || '',
     access_token: localStorage.getItem('access_token') || '',
   },
@@ -51,15 +54,6 @@ entityAxios.interceptors.request.use(function (config: AxiosRequestConfig) {
   (config.headers as AxiosRequestHeaders).user_id = userId;
   return config;
 });
-
-entityAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    return Promise.reject(error);
-  }
-);
 
 export const authClient = makeService(authAxios);
 export const client = makeService(entityAxios);
