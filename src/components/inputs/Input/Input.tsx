@@ -8,13 +8,15 @@ function Input(props: InputProp) {
   useEffect(() => {
     if (props.data) {
       setContent(props.data);
-      props.setContent(props.data);
     }
   }, []);
 
+  useEffect(() => {
+    props.setContent(content);
+  }, [content]);
+
   const onChange = (e: any) => {
     const value = e.target.value;
-    props.setContent(value);
     setContent(value);
   };
 
