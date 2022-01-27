@@ -32,7 +32,7 @@ function Portfolio() {
         title: 'assets_ids',
         label: 'Assets',
         type: 'text',
-        inputStyle: 'select' as InputConfig['inputStyle'],
+        inputStyle: 'multiselect' as InputConfig['inputStyle'],
         options: useSelector(selectAssets).map((asset: Asset) => ({
           label: asset.code,
           value: asset.id,

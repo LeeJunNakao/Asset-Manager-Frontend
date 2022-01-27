@@ -5,13 +5,26 @@
     flex-grow: 1;
     padding: 5px;
     font-size: 12px;
+    column-gap: 10px;
+
+    &:hover {
+        .row-data {
+            color: #4F86C6;
+        }
+    }
+
+    .row-data{
+        &:hover {
+            cursor: pointer;
+        }
+    }
 }
 
 .header {
     background-color: black;
     color: white;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 10px;
 }
 
 .actions {

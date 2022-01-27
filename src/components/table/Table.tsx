@@ -1,18 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import './Table.scss';
 import { FaTrash } from 'react-icons/fa';
 import { MdModeEditOutline } from 'react-icons/md';
-
-interface TableData {
-  [key: string]: any;
-}
-
-interface TableProps {
-  data: TableData;
-  exclude?: String[];
-  onDelete?: (data: TableData) => any;
-  onEdit?: (data: TableData) => any;
-}
+import { TableData, TableProps } from './protocols';
+import { formatRowItem } from './fns';
+import './style.scss';
 
 export default function Table(props: TableProps) {
   const headerData: string[] =
@@ -30,14 +21,12 @@ export default function Table(props: TableProps) {
     : [];
 
   const componentStyle = {
-    gridTemplateColumns: '1fr '.repeat(header.length),
+    gridTemplateColumns: `${'1fr '.repeat(header.length)} 40px`,
   } as React.CSSProperties;
 
   const items = props.data.map((item: TableData) => (
     <div className="table-row" style={componentStyle} key={uuidv4()}>
-      {headerData.map((h: string) => (
-        <div key={uuidv4()}>{item[h]}</div>
-      ))}
+      {headerData.map(formatRowItem(props, item))}
       <div className="actions">
         <FaTrash
           className="icon"

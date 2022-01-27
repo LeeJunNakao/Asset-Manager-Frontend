@@ -1,7 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import { selectAssets, updateAsset, addAsset, removeAsset } from 'store/asset';
 import { editAsset, createAsset, deleteAsset } from 'http-services/asset';
 import generatePage from 'utils/page/generate-entity-page';
-import { InputConfig } from 'components/form/FormBuilder/protocols';
+import { InputConfig, Payload } from 'components/form/FormBuilder/protocols';
 
 const formData = {
   title: 'Asset',
@@ -26,21 +27,34 @@ const formData = {
     },
   ],
 };
+function Asset() {
+  const navigate = useNavigate();
 
-const Asset = generatePage({
-  title: 'Asset',
-  formData: formData,
-  service: {
-    createItem: createAsset,
-    editItem: editAsset,
-    deleteItem: deleteAsset,
-  },
-  store: {
-    selectItems: selectAssets,
-    addItem: addAsset,
-    updateItem: updateAsset,
-    removeItem: removeAsset,
-  },
-});
+  const openAsset = (data: Payload) => {
+    const { id } = data;
+    navigate(`/asset/${id}`);
+  };
+
+  const Page = generatePage({
+    title: 'Asset',
+    formData: formData,
+    table: {
+      onClick: openAsset,
+    },
+    service: {
+      createItem: createAsset,
+      editItem: editAsset,
+      deleteItem: deleteAsset,
+    },
+    store: {
+      selectItems: selectAssets,
+      addItem: addAsset,
+      updateItem: updateAsset,
+      removeItem: removeAsset,
+    },
+  });
+
+  return Page();
+}
 
 export default Asset;

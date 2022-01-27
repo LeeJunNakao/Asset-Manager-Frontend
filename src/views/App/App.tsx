@@ -8,10 +8,12 @@ import Home from 'views/Home/Home';
 import Asset from 'views/Asset/Asset';
 import Currency from 'views/Currency/Currency';
 import Portfolio from 'views/Portfolio/Portfolio';
+import AssetEntry from 'views/AssetEntry/AssetEntry';
 import { getAsset } from 'http-services/asset';
 import { getCurrency } from 'http-services/currency';
 import { getPortfolio } from 'http-services/portfolio';
-import { setAssets } from 'store/asset';
+import { getAssetEntry } from 'http-services/asset/asset-entry';
+import { setAssetEntries, setAssets } from 'store/asset';
 import { setCurrencies } from 'store/currency';
 import { setPortfolios } from 'store/portfolio';
 import PageLoading from 'components/page-loading/PageLoading';
@@ -37,12 +39,18 @@ function App() {
       dispatch(setPortfolios(response));
     };
 
+    const fetchAssetEntry = async () => {
+      const response = await getAssetEntry();
+      dispatch(setAssetEntries(response));
+    };
+
     if (authenticated) {
       try {
         setIsLoading(true);
         fetchAssets();
         fetchCurrency();
         fetchPortfolio();
+        fetchAssetEntry();
       } finally {
         setIsLoading(false);
       }
@@ -69,6 +77,14 @@ function App() {
             element={
               <RequireAuth>
                 <Asset />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="asset/:assetId"
+            element={
+              <RequireAuth>
+                <AssetEntry />
               </RequireAuth>
             }
           />

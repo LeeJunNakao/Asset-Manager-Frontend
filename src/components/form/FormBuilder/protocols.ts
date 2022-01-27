@@ -31,7 +31,7 @@ export interface InputConfig {
   title: string;
   label: string;
   type: string;
-  inputStyle: 'input' | 'select';
+  inputStyle: 'input' | 'select' | 'multiselect';
   properties?: this;
   getState: () => any;
   setState: (state: any) => void;
@@ -51,10 +51,17 @@ export type InputProp = {
   data?: string;
 };
 
-export interface SelectProp extends Omit<InputProp, 'data' | 'setContent'> {
+export interface MultiselectProp
+  extends Omit<InputProp, 'data' | 'setContent'> {
   options: Options;
   data: Options;
   setContent: (value: Options) => void;
+}
+
+export interface SelectProp extends Omit<InputProp, 'data' | 'setContent'> {
+  options: Options;
+  data: string;
+  setContent: (value: string) => void;
 }
 
 export interface FormErrors {

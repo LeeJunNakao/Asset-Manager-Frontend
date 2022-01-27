@@ -1,34 +1,28 @@
-import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect } from 'react';
-import FormControl from '@mui/material/FormControl';
+import { v4 as uuidv4 } from 'uuid';
 import MaterialSelect from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
-import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
 import {
   SelectProp,
   SelectOption,
 } from 'components/form/FormBuilder/protocols';
-import './style.scss';
+import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 
 function Select(props: SelectProp) {
-  const [selectedValue, setContent] = useState<SelectProp['options']>([]);
-  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [selectedValue, setContent] = useState<string>('');
 
   useEffect(() => {
-    const labels = selectedValue.map((value): string => {
-      if (typeof props.options[0] === 'string') return value as string;
+    if (props.data) {
+      setContent(props.data);
+    }
+  }, []);
 
-      const item = props.options.find(
-        (o: any) => o.value === value
-      ) as SelectOption;
-
-      return item.label;
-    });
-
-    setSelectedLabels(labels);
-  }, [selectedValue]);
+  const selectedLabel =
+    props.options[0] && typeof props.options[0] === 'object'
+      ? (props.options as SelectOption[]).find((i) => i.value === selectedValue)
+          ?.label
+      : selectedValue;
 
   const handleChange = (event: any) => {
     const {
@@ -38,26 +32,16 @@ function Select(props: SelectProp) {
     props.setContent(value);
   };
 
-  useEffect(() => {
-    if (props.data) {
-      setContent(props.data);
-      props.setContent(props.data);
-    }
-  }, []);
-
   return (
     <div className="input-component-wrapper">
       <span> {props.label} </span>
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
           value={selectedValue}
-          multiple={Boolean(props.type === 'multi')}
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selectedLabels.map((item) => (
-                <Chip key={uuidv4()} label={item} />
-              ))}
+              {selectedLabel}
             </Box>
           )}
         >
@@ -67,8 +51,6 @@ function Select(props: SelectProp) {
               value={typeof option === 'string' ? option : option.value}
             >
               <div className="item">
-                <ImCheckboxUnchecked className="unchecked-icon" />
-                <ImCheckboxChecked className="checked-icon" />
                 <span>
                   {typeof option === 'string' ? option : option.label}
                 </span>

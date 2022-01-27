@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import './PageContent.scss';
 
-type MenuItem = {
+export type MenuItem = {
   icon: (props: any) => JSX.Element;
   text: string;
   onClick?: (args: any) => any;

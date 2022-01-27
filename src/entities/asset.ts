@@ -12,6 +12,7 @@ export type AssetEntry = {
   currency_id: number;
   is_purchase: boolean;
   quantity: number;
+  value: number;
   user_id: number;
 };
 

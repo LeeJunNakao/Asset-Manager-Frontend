@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Asset, AssetEntryRequestPayload } from 'entities/asset';
+import { Asset, AssetEntry, AssetEntryRequestPayload } from 'entities/asset';
 
 interface State {
   assets: Asset[];
@@ -66,7 +66,9 @@ export const assetSlice = createSlice({
 });
 
 export const selectAssets = (state: any) => state.asset.assets;
-export const selectAssetEntries = (state: any) => state.asset.assetEntries;
+export const selectAsset = (state: any) => (id: number) =>
+  state.asset.assets.find((i: Asset) => i.id === id);
+export const selectEntries = (state: any) => state.asset.assetEntries;
 
 export const {
   setAssets,

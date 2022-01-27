@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageContent from 'components/page-content/PageContent';
+import PageContent, { MenuItem } from 'components/page-content/PageContent';
 import FormBuilder from 'components/form/FormBuilder/FormBuilder';
 import Table from 'components/table/Table';
 import { Payload, InputConfig } from 'components/form/FormBuilder/protocols';
@@ -13,12 +13,15 @@ import {
   FormData,
   InputConfigProp,
 } from 'components/form/FormBuilder/protocols';
+import { Masks } from 'components/table/protocols';
 
-interface Props {
+type GenerateConfig = {
   title: string;
   formData: FormData<InputConfigProp>;
   table?: {
     exclude?: string[];
+    onClick?: (item: Payload) => void;
+    masks?: Masks;
   };
   service: {
     createItem: (i: any) => Promise<Payload>;
@@ -31,29 +34,37 @@ interface Props {
     updateItem: any;
     removeItem: any;
   };
-}
+};
 
-export function generatePage(props: Props) {
-  return function PageModel() {
+type Props = {
+  upperChildren?: JSX.Element;
+  menu?: MenuItem[];
+};
+
+export function generatePage(config: GenerateConfig) {
+  return function PageModel(props?: Props) {
     const [payload, setPayload] = useState({} as Payload);
     const [mode, setMode] = useState('list');
     const [awaitingResponse, setAwaitingResponse] = useState(false);
     const [responseError, setResponseError] = useState('');
     const [selectedItem, setSelectedItem] = useState({});
-    const items = useSelector(props.store.selectItems) as Payload[];
+    const items = useSelector(config.store.selectItems) as Payload[];
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const create = async () => {
       try {
-        const response = await props.service.createItem(payload as Payload);
-        dispatch(props.store.addItem(response));
+        const response = await config.service.createItem(payload as Payload);
+        dispatch(config.store.addItem(response));
         setMode('list');
-      } catch (error) {}
+      } catch (error) {
+        setResponseError('Failed to create');
+      }
     };
 
     const menu = [
+      ...(props?.menu || []),
       {
         icon: ImHome,
         text: 'home',
@@ -81,24 +92,28 @@ export function generatePage(props: Props) {
           ...payload,
         };
 
-        const response = await props.service.editItem(value as Payload);
+        const response = await config.service.editItem(value as Payload);
 
-        dispatch(props.store.updateItem(response));
+        dispatch(config.store.updateItem(response));
         setMode('list');
-      } catch (error) {}
+      } catch (error) {
+        setResponseError('Failed to edit');
+      }
     };
 
     const onDelete = async (data: Payload) => {
       try {
-        await props.service.deleteItem(data.id);
-        dispatch(props.store.removeItem(data));
-      } catch (error) {}
+        await config.service.deleteItem(data.id);
+        dispatch(config.store.removeItem(data));
+      } catch (error) {
+        setResponseError('Failed to delete');
+      }
     };
 
     const Forms =
       mode === 'create' ? (
         <FormBuilder
-          formData={props.formData}
+          formData={config.formData}
           onSubmit={create}
           loading={awaitingResponse}
           formError={responseError}
@@ -106,7 +121,7 @@ export function generatePage(props: Props) {
         />
       ) : mode === 'edit' ? (
         <FormBuilder
-          formData={props.formData}
+          formData={config.formData}
           filledData={selectedItem}
           onSubmit={onEdit}
           loading={awaitingResponse}
@@ -119,14 +134,17 @@ export function generatePage(props: Props) {
             data={items as Payload}
             onEdit={handleEdit}
             onDelete={onDelete}
-            exclude={props.table?.exclude || ['id', 'user_id']}
+            onClick={config.table?.onClick}
+            exclude={config.table?.exclude || ['id', 'user_id']}
+            masks={config.table?.masks}
           />
         )
       );
 
     return (
       <div id="asset-page" className="page-wrapper">
-        <PageContent text={props.title} menu={menu}>
+        <PageContent text={config.title} menu={menu}>
+          {props?.upperChildren}
           {mode === 'list' && !items.length ? (
             <MessageBox message="no item" />
           ) : (
