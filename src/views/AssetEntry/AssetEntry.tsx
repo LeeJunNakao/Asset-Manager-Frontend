@@ -34,7 +34,7 @@ function AssetEntry() {
       const data = {
         ...entry,
         type: entry.is_purchase ? 'purchase' : 'sell',
-        value: Number(entry.value) / 10 ** currency.decimal,
+        value: currency ? Number(entry.value) / 10 ** currency.decimal : 0,
       };
 
       return data;
