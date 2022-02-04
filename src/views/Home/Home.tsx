@@ -8,19 +8,24 @@ import './Home.scss';
 function Home() {
   return (
     <div id="home">
-      <div className="panel">
-        <Link className="item" to="asset">
-          <RiStockLine />
+      <div className="home-wrapper">
+        <div className="logo">
           <span>Asset</span>
-        </Link>
-        <Link className="item" to="currency">
-          <HiCurrencyDollar />
-          <span>Currency</span>
-        </Link>
-        <Link className="item" to="portfolio">
-          <BsFillCollectionFill />
-          <span>Portfolio</span>
-        </Link>
+        </div>
+        <div className="panel">
+          <Link className="item" to="asset">
+            <RiStockLine />
+            <span>Asset</span>
+          </Link>
+          <Link className="item" to="currency">
+            <HiCurrencyDollar />
+            <span>Currency</span>
+          </Link>
+          <Link className="item" to="portfolio">
+            <BsFillCollectionFill />
+            <span>Portfolio</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

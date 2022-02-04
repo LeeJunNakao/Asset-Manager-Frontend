@@ -16,10 +16,10 @@ export interface ValidationResult {
   message: string;
 }
 
-export interface ValidationPipeArg {
-  item: InputConfig;
-  result: ValidationResult;
-}
+  export interface ValidationPipeArg {
+    item: InputConfig;
+    result: ValidationResult;
+  }
 export type SelectOption = {
   value: string;
   label: string;
