@@ -16,16 +16,18 @@ export interface ValidationResult {
   message: string;
 }
 
-  export interface ValidationPipeArg {
-    item: InputConfig;
-    result: ValidationResult;
-  }
-export type SelectOption = {
-  value: string;
+export interface ValidationPipeArg {
+  item: InputConfig;
+  result: ValidationResult;
+}
+export type SelectOption<T> = {
+  value: T;
   label: string;
 };
 
-type Options = Array<string | SelectOption>;
+type Options<T> = Array<SelectOption<T>>;
+
+export type MultiselectData<T> = Set<T>;
 
 export interface InputConfig {
   title: string;
@@ -36,7 +38,7 @@ export interface InputConfig {
   getState: () => any;
   setState: (state: any) => void;
   validation?: ValidationConfig;
-  options?: Options;
+  options?: Options<any>;
 }
 
 export type InputConfigProp = Omit<InputConfig, 'getState' | 'setState'>;
@@ -51,16 +53,16 @@ export type InputProp = {
   data?: string;
 };
 
-export interface MultiselectProp
+export interface MultiselectProp<T>
   extends Omit<InputProp, 'data' | 'setContent'> {
-  options: Options;
-  data: Options;
-  setContent: (value: Options) => void;
+  options: Options<T>;
+  data: T[];
+  setContent: (value: T[]) => void;
 }
 
-export interface SelectProp extends Omit<InputProp, 'data' | 'setContent'> {
-  options: Options;
-  data: string;
+export interface SelectProp<T> extends Omit<InputProp, 'data' | 'setContent'> {
+  options: Options<T>;
+  data: T;
   setContent: (value: string) => void;
 }
 

@@ -1,43 +1,30 @@
 .MuiFormControl-root {
-    .MuiOutlinedInput-root {
-        height: 30px;
+  .MuiOutlinedInput-root {
+  }
+  .MuiOutlinedInput-notchedOutline {
+    border-color: black !important;
+  }
+
+  .MuiBox-root {
+    // background-color: yellow;
+    overflow: hidden;
+    .MuiChip-root {
     }
-    .MuiOutlinedInput-notchedOutline{
-        border-color:black !important;
-    }
+  }
 }
 
-
 ul {
-    li {
-        display: flex;
-        .unchecked-icon {
-            display: none;
-        }
-        .checked-icon {
-            display: none;
-        }   
+  li {
+    display: flex;
 
-        &[aria-selected=true] {
-            .checked-icon {
-                display: flex;
-            }
-        }
+    .item {
+      width: 100%;
+      display: flex;
+      align-items: center;
 
-        &[aria-selected=false] {
-            .unchecked-icon {
-                display: flex;
-            }
-        }
-
-        .item {
-            width: 100%;
-            display: flex;
-            align-items: center;
-
-            span {
-                margin-left: 10px;
-            }
-        }
+      span {
+        margin-left: 10px;
+      }
     }
-}  
+  }
+}

@@ -9,6 +9,7 @@ import { validator } from 'utils/form/validator';
 import Loading from 'components/icons/Loading';
 import { FormProps, FieldsData, FormData, InputConfig } from './protocols';
 import { inferInput, formatFormData } from './fns';
+import './styles.scss';
 
 function FormBuilder(props: FormProps) {
   const [fieldsData, setFieldsData] = useState({} as FieldsData);

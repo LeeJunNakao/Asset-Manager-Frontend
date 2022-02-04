@@ -12,7 +12,10 @@ import {
 
 export const inferInput = (
   property: InputConfig
-): React.FC<InputProp> | React.FC<SelectProp> | React.FC<MultiselectProp> => {
+):
+  | React.FC<InputProp>
+  | React.FC<SelectProp<any>>
+  | React.FC<MultiselectProp<any>> => {
   const inputTypes = {
     input: Input,
     select: Select,

@@ -55,11 +55,14 @@ export function generatePage(config: GenerateConfig) {
 
     const create = async () => {
       try {
+        setAwaitingResponse(true);
         const response = await config.service.createItem(payload as Payload);
         dispatch(config.store.addItem(response));
         setMode('list');
       } catch (error) {
         setResponseError('Failed to create');
+      } finally {
+        setAwaitingResponse(false);
       }
     };
 
@@ -87,6 +90,7 @@ export function generatePage(config: GenerateConfig) {
 
     const onEdit = async () => {
       try {
+        setAwaitingResponse(true);
         const value = {
           ...selectedItem,
           ...payload,
@@ -98,15 +102,20 @@ export function generatePage(config: GenerateConfig) {
         setMode('list');
       } catch (error) {
         setResponseError('Failed to edit');
+      } finally {
+        setAwaitingResponse(false);
       }
     };
 
     const onDelete = async (data: Payload) => {
       try {
+        setAwaitingResponse(true);
         await config.service.deleteItem(data.id);
         dispatch(config.store.removeItem(data));
       } catch (error) {
         setResponseError('Failed to delete');
+      } finally {
+        setAwaitingResponse(false);
       }
     };
 

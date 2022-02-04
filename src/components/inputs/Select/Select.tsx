@@ -9,8 +9,8 @@ import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 
-function Select(props: SelectProp) {
-  const [selectedValue, setContent] = useState<string>('');
+function Select<T>(props: SelectProp<T>) {
+  const [selectedValue, setContent] = useState<T | null>(null);
 
   useEffect(() => {
     if (props.data) {
@@ -20,8 +20,9 @@ function Select(props: SelectProp) {
 
   const selectedLabel =
     props.options[0] && typeof props.options[0] === 'object'
-      ? (props.options as SelectOption[]).find((i) => i.value === selectedValue)
-          ?.label
+      ? (props.options as SelectOption<T>[]).find(
+          (i) => i.value === selectedValue
+        )?.label
       : selectedValue;
 
   const handleChange = (event: any) => {
@@ -46,10 +47,7 @@ function Select(props: SelectProp) {
           )}
         >
           {(props.options || []).map((option) => (
-            <MenuItem
-              key={uuidv4()}
-              value={typeof option === 'string' ? option : option.value}
-            >
+            <MenuItem key={uuidv4()} value={option.value as unknown as string}>
               <div className="item">
                 <span>
                   {typeof option === 'string' ? option : option.label}

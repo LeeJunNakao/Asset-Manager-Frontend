@@ -9,38 +9,54 @@ import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
 import {
   MultiselectProp,
   SelectOption,
+  MultiselectData,
 } from 'components/form/FormBuilder/protocols';
+import { CustomSet } from 'utils/parser/set';
 import './style.scss';
 
-function Select(props: MultiselectProp) {
-  const [selectedValue, setContent] = useState<MultiselectProp['options']>([]);
+function Select<T>(props: MultiselectProp<T>) {
+  const [selectedValues, setContent] = useState<MultiselectData<T>>(
+    new Set([])
+  );
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
 
   useEffect(() => {
-    const labels = selectedValue.map((value): string => {
-      if (typeof props.options[0] === 'string') return value as string;
+    const labels = Array.from(selectedValues).map((value) => {
+      const item = props.options.find((o) => o.value === value);
 
-      const item = props.options.find(
-        (o: any) => o.value === value
-      ) as SelectOption;
-
-      return item.label;
+      return item?.label;
     });
+    //
+    /*
+export type SelectOption<T> = {
+  value: T;
+  label: string;
+};
+type Options<T> = Array<SelectOption<T>>;
+setContent: (value: Options<T>) => void;
 
-    setSelectedLabels(labels);
-  }, [selectedValue]);
+type MultiselectData<T> = Set<T>;
+*/
+    setSelectedLabels(labels as string[]);
+    props.setContent(Array.from(selectedValues));
+  }, [selectedValues]);
 
   const handleChange = (event: any) => {
     const {
       target: { value },
     } = event;
-    setContent(value);
-    props.setContent(value);
+    const option = props.options.find((i) => i.value === value);
+
+    if (option) {
+      const set = new CustomSet<T>(Array.from(selectedValues.values()));
+      set.add(option.value);
+      setContent(set);
+    }
   };
 
   useEffect(() => {
     if (props.data) {
-      setContent(props.data);
+      setContent(new Set(props.data));
       props.setContent(props.data);
     }
   }, []);
@@ -50,7 +66,7 @@ function Select(props: MultiselectProp) {
       <span> {props.label} </span>
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
-          value={selectedValue}
+          value={selectedValues}
           multiple={Boolean(props.type === 'multi')}
           onChange={handleChange}
           renderValue={(selected) => (
@@ -62,16 +78,16 @@ function Select(props: MultiselectProp) {
           )}
         >
           {(props.options || []).map((option) => (
-            <MenuItem
-              key={uuidv4()}
-              value={typeof option === 'string' ? option : option.value}
-            >
+            <MenuItem key={uuidv4()} value={option.value as unknown as string}>
               <div className="item">
-                <ImCheckboxUnchecked className="unchecked-icon" />
-                <ImCheckboxChecked className="checked-icon" />
-                <span>
-                  {typeof option === 'string' ? option : option.label}
-                </span>
+                {Array.from(selectedValues.values()).find(
+                  (v) => v === option.value
+                ) ? (
+                  <ImCheckboxChecked className="checked-icon" />
+                ) : (
+                  <ImCheckboxUnchecked className="unchecked-icon" />
+                )}
+                <span>{option.label}</span>
               </div>
             </MenuItem>
           ))}
