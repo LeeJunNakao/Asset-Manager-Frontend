@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && mv ./build ./dist/build",
+    "build": "react-scripts build && rsync -a ./build ./dist && rm -R ./build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
