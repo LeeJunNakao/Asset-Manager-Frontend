@@ -100,6 +100,8 @@ export const assetSlice = createSlice({
 });
 
 export const selectAssets = (state: any) => state.asset.assets;
+export const selectAssetsByIds = (assetsIds: Asset['id'][]) => (state: any) =>
+  state.asset.assets.filter((a: Asset) => assetsIds.includes(a.id));
 export const selectAsset = (state: any) => (id: number) =>
   state.asset.assets.find((i: Asset) => i.id === id);
 export const selectEntries = (state: any) => state.asset.assetEntries;

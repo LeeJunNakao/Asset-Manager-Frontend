@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TableData, TableProps, Masks } from './protocols';
+import { TableData, TableProps } from './protocols';
 
 export const formatRowItem =
   (props: TableProps, item: TableData) => (headerItem: string) => {

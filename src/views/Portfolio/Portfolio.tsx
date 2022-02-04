@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
-import { InputConfig } from 'components/form/FormBuilder/protocols';
+import { useNavigate } from 'react-router-dom';
+import { InputConfig, Payload } from 'components/form/FormBuilder/protocols';
 import generatePage from 'utils/page/generate-entity-page';
 import {
   createPortfolio,
@@ -16,6 +17,8 @@ import { selectAssets } from 'store/asset';
 import { Asset } from 'entities/asset';
 
 function Portfolio() {
+  const navigate = useNavigate();
+
   const formData = {
     title: 'Asset',
     properties: [
@@ -41,11 +44,17 @@ function Portfolio() {
     ],
   };
 
+  const openPortfolio = (data: Payload) => {
+    const { id } = data;
+    navigate(`/portfolio/${id}`);
+  };
+
   return generatePage({
     title: 'Portfolio',
     formData: formData,
     table: {
       exclude: ['id', 'user_id', 'assets_ids'],
+      onClick: openPortfolio,
     },
     service: {
       createItem: createPortfolio,

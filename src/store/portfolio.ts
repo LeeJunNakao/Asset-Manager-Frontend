@@ -39,6 +39,10 @@ export const portfolioSlice = createSlice({
 });
 
 export const selectPortfolios = (state: any) => state.portfolio.portfolios;
+export const selectPortfolio = (portfolioId: Portfolio['id']) => (state: any) =>
+  (state.portfolio.portfolios as Portfolio[]).find(
+    (p: Portfolio) => p.id === portfolioId
+  );
 
 export const { setPortfolios, updatePortfolio, addPortfolio, removePortfolio } =
   portfolioSlice.actions;

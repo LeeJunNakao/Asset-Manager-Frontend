@@ -8,7 +8,8 @@ import Home from 'views/Home/Home';
 import Asset from 'views/Asset/Asset';
 import Currency from 'views/Currency/Currency';
 import Portfolio from 'views/Portfolio/Portfolio';
-import AssetEntry from 'views/AssetEntry/AssetEntry';
+import AssetEntry from 'views/Asset/AssetEntry/AssetEntry';
+import PorfolioDetails from 'views/Portfolio/details/PortfolioDetails';
 import { getAsset } from 'http-services/asset';
 import { getCurrency } from 'http-services/currency';
 import { getPortfolio } from 'http-services/portfolio';
@@ -101,6 +102,14 @@ function App() {
             element={
               <RequireAuth>
                 <Portfolio />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/portfolio/:portfolioId"
+            element={
+              <RequireAuth>
+                <PorfolioDetails />
               </RequireAuth>
             }
           />

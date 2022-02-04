@@ -1,4 +1,9 @@
 @import './colors.scss';
+@import './mixin.scss';
+
+.info-tag {
+  @include info-tag;
+}
 
 .gray-bg {
   background-color: $gray;

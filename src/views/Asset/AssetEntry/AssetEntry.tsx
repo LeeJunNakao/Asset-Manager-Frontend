@@ -1,7 +1,7 @@
 import { Currency } from 'entities/currency';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { InputConfig, Payload } from 'components/form/FormBuilder/protocols';
+import { InputConfig } from 'components/form/FormBuilder/protocols';
 import generatePage from 'utils/page/generate-entity-page';
 import {
   createAssetEntry,

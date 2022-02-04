@@ -3,6 +3,7 @@ import { selectAssets, updateAsset, addAsset, removeAsset } from 'store/asset';
 import { editAsset, createAsset, deleteAsset } from 'http-services/asset';
 import generatePage from 'utils/page/generate-entity-page';
 import { InputConfig, Payload } from 'components/form/FormBuilder/protocols';
+import { useSelector } from 'react-redux';
 
 const formData = {
   title: 'Asset',
