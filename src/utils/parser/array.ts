@@ -2,7 +2,6 @@ type Key = string | number;
 type Item = {
   [key: Key]: any;
 };
-
 type GroupedItems = {
   [key: Key]: Item[];
 };

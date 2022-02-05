@@ -3,7 +3,7 @@ import { Currency } from 'entities/currency';
 
 const URL = '/currency';
 
-export const getCurrency = async () => {
+export const getCurrency = async (): Promise<Currency[]> => {
   const response = await client.get(URL);
   return response.data;
 };

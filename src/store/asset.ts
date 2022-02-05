@@ -3,11 +3,22 @@ import { Asset, AssetEntry, AssetEntryRequestPayload } from 'entities/asset';
 import deepcopy from 'deepcopy';
 import { toISODate, sortByDate } from 'utils/parser/date';
 import AvgPriceCalculator, { Item } from 'utils/parser/avg-price-calculator';
+import { groupBy } from 'utils/parser/array';
 
 interface State {
   assets: Asset[];
   assetEntries: AssetEntryRequestPayload;
 }
+
+type GroupedEntries = {
+  [currencyId: string | number]: Item[];
+};
+type AveragePrice = {
+  [currencyId: number]: number;
+};
+type GroupedAveragedPrice = {
+  [assetId: string]: AveragePrice;
+};
 
 const sortAssetEntries = (entries: AssetEntryRequestPayload) => {
   const sortedEntries = Object.entries(entries)
@@ -104,22 +115,47 @@ export const selectAsset = (state: any) => (id: number) =>
   state.asset.assets.find((i: Asset) => i.id === id);
 export const selectEntries = (state: any) =>
   (state.asset as State).assetEntries;
-export const selectAssetAvgPrice = (state: any) => {
-  const entries = Object.entries(selectEntries(state))
-    .map(([assetId, entries]): [string, Item[]] => [
-      assetId,
-      entries.map((i) => ({
-        ...i,
-        isPurchase: i.is_purchase,
-        date: new Date(i.date),
-      })),
-    ])
-    .map(([assetId, entries]) => [
-      assetId,
-      new AvgPriceCalculator(entries).calculate(),
-    ]);
+export const selectAssetAvgPrice = (state: any): GroupedAveragedPrice => {
+  const formatEntries = ([assetId, entries]: [string, AssetEntry[]]): [
+    string,
+    Item[]
+  ] => [
+    assetId,
+    entries.map((i) => ({
+      ...i,
+      isPurchase: i.is_purchase,
+      date: new Date(i.date),
+    })),
+  ];
 
-  return Object.fromEntries(entries);
+  const groupEntries = ([assetId, entries]: [string, Item[]]): [
+    string,
+    GroupedEntries
+  ] => {
+    const parsedEntries = groupBy(entries, 'currency_id') as GroupedEntries;
+    return [assetId, parsedEntries];
+  };
+
+  const groupAveragePrices = ([assetId, groupedEntries]: [
+    string,
+    GroupedEntries
+  ]): [string, AveragePrice] => {
+    const avgPriced = Object.entries(groupedEntries).map(
+      ([currencyId, items]) => [
+        currencyId,
+        new AvgPriceCalculator(items).calculate(),
+      ]
+    );
+    return [assetId, Object.fromEntries(avgPriced)];
+  };
+
+  const entries = Object.entries(selectEntries(state))
+    .map(formatEntries)
+    .map(groupEntries)
+    .map(groupAveragePrices);
+
+  const averagePrices: GroupedAveragedPrice = Object.fromEntries(entries);
+  return averagePrices;
 };
 
 export const {

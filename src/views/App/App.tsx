@@ -15,7 +15,7 @@ import { getCurrency } from 'http-services/currency';
 import { getPortfolio } from 'http-services/portfolio';
 import { getAssetEntry } from 'http-services/asset/asset-entry';
 import { setAssetEntries, setAssets } from 'store/asset';
-import { setCurrencies } from 'store/currency';
+import { setCurrencies, setSelectedCurrency } from 'store/currency';
 import { setPortfolios } from 'store/portfolio';
 import PageLoading from 'components/page-loading/PageLoading';
 
@@ -32,6 +32,8 @@ function App() {
 
     const fetchCurrency = async () => {
       const response = await getCurrency();
+      const [defaultCurrency] = response.sort((a, b) => a.id - b.id);
+      dispatch(setSelectedCurrency(defaultCurrency));
       dispatch(setCurrencies(response));
     };
 

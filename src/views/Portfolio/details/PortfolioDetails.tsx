@@ -7,9 +7,11 @@ import { selectAssetsByIds, selectAssetAvgPrice } from 'store/asset';
 import PageContent from 'components/page-content/PageContent';
 import Table from 'components/table/Table';
 import { TableData } from 'components/table/protocols';
-import './styles.scss';
+import currency, { getSelectedCurrency } from 'store/currency';
 import { useEffect } from 'react';
 import { maskCurrency } from 'utils/masks';
+import './styles.scss';
+import { fromRawToFormated } from 'utils/parser/currency';
 
 function PortfolioDetails() {
   const navigate = useNavigate();
@@ -20,10 +22,26 @@ function PortfolioDetails() {
     selectAssetsByIds(portfolio?.assets_ids || [])
   );
   const avgPrice = useSelector(selectAssetAvgPrice);
-  const parsedAssets = assetsData.map((i) => ({
-    ...i,
-    'avg price': avgPrice[i.id],
-  }));
+  const selectedCurrency = useSelector(getSelectedCurrency);
+  const parsedAssets = assetsData.map((i) => {
+    if (selectedCurrency) {
+      const averagePrice = avgPrice[i.id][selectedCurrency.id] || 0;
+      const formatedPrice = fromRawToFormated(
+        averagePrice,
+        selectedCurrency.decimal
+      );
+      return {
+        ...i,
+        'avg price': maskCurrency(
+          formatedPrice,
+          selectedCurrency.decimal,
+          selectedCurrency.code
+        ),
+      };
+    }
+
+    return { ...i, 'avg price': 0 };
+  });
 
   const menu = [
     {
@@ -34,12 +52,11 @@ function PortfolioDetails() {
   ];
 
   const onClick = (data: TableData) => {
-    console.log('!!!!!!!!!!!!!!!!!!!!', data);
     navigate(`/asset/${data.id}`);
   };
 
   return (
-    <div className="page-wrapper">
+    <div id="portfolio-details-page" className="page-wrapper">
       <PageContent text="Porfolio" menu={menu}>
         <div className="info-tag">
           <span>{portfolio?.name}</span>

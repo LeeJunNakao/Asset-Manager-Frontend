@@ -39,8 +39,16 @@ export default function Table(props: TableProps) {
   const DeleteIcons = (item: TableData) => {
     if (deletingItem?.id === item.id) {
       return [
-        <FaTrash className="icon" onClick={() => handleDelete(item)} />,
-        <FiX className="icon" onClick={() => setDeletingItem(null)} />,
+        <FaTrash
+          className="icon"
+          key={uuidv4()}
+          onClick={() => handleDelete(item)}
+        />,
+        <FiX
+          className="icon"
+          key={uuidv4()}
+          onClick={() => setDeletingItem(null)}
+        />,
       ];
     }
     return <FaTrash className="icon" onClick={() => handleDelete(item)} />;

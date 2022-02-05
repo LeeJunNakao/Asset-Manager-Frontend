@@ -38,7 +38,7 @@ function Select<T>(props: SelectProp<T>) {
       <span> {props.label} </span>
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
-          value={selectedValue}
+          value={selectedValue || ''}
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
