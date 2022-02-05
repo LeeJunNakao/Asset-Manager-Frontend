@@ -24,7 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const authenticated = useSelector((state: any) => state.auth.authenticated);
 
-  useEffect(() => {
+  const requestData = async () => {
     const fetchAssets = async () => {
       const response = await getAsset();
       dispatch(setAssets(response));
@@ -44,17 +44,20 @@ function App() {
       const response = await getAssetEntry();
       dispatch(setAssetEntries(response));
     };
+    try {
+      setIsLoading(true);
+      await fetchAssets();
+      await fetchCurrency();
+      await fetchPortfolio();
+      await fetchAssetEntry();
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (authenticated) {
-      try {
-        setIsLoading(true);
-        fetchAssets();
-        fetchCurrency();
-        fetchPortfolio();
-        fetchAssetEntry();
-      } finally {
-        setIsLoading(false);
-      }
+      requestData();
     }
   }, [authenticated]);
 
