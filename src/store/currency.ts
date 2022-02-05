@@ -3,12 +3,14 @@ import { Currency } from 'entities/currency';
 
 interface State {
   currencies: Currency[];
+  selectedCurrency: Currency | null;
 }
 
 export const currencySlice = createSlice({
   name: 'currency',
   initialState: {
     currencies: [],
+    selectedCurrency: null,
   } as State,
   reducers: {
     setCurrencies: (state, action) => {
@@ -35,11 +37,22 @@ export const currencySlice = createSlice({
 
       state.currencies = currencies;
     },
+    setSelectedCurrency: (state, action: { payload: Currency }) => {
+      state.selectedCurrency = action.payload;
+    },
   },
 });
 
-export const selectCurrencies = (state: any) => state.currency.currencies;
+export const selectCurrencies = (state: any) =>
+  (state.currency as State).currencies;
+export const getSelectedCurrency = (state: any) =>
+  (state.currency as State).selectedCurrency;
 
-export const { setCurrencies, updateCurrency, addCurrency, removeCurrency } =
-  currencySlice.actions;
+export const {
+  setCurrencies,
+  updateCurrency,
+  addCurrency,
+  removeCurrency,
+  setSelectedCurrency,
+} = currencySlice.actions;
 export default currencySlice.reducer;

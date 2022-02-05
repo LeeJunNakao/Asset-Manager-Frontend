@@ -12,6 +12,16 @@
     }
   }
 
+  .currency-wrapper {
+    .input-component-wrapper {
+      display: grid;
+      grid-template-columns: 90px 80px;
+      width: 170px;
+      align-items: center;
+    }
+    padding-bottom: 20px;
+  }
+
   .panel {
     border: 1px solid black;
     border-radius: 3px;

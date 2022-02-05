@@ -115,7 +115,7 @@ function AssetEntry() {
       ...payload,
       date: payload.date.split('T')[0],
       asset_id: Number(assetId),
-      value: payload.value * 10 ** currency.decimal,
+      value: currency ? payload.value * 10 ** currency.decimal : 0,
     };
 
     const response = await createAssetEntry(data);
@@ -131,7 +131,7 @@ function AssetEntry() {
       ...payload,
       date: payload.date.split('T')[0],
       asset_id: Number(assetId),
-      value: payload.value * 10 ** currency.decimal,
+      value: currency ? payload.value * 10 ** currency.decimal : 0,
     };
 
     const response = await editAssetEntry(data);

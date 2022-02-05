@@ -44,7 +44,7 @@ export interface InputConfig {
 export type InputConfigProp = Omit<InputConfig, 'getState' | 'setState'>;
 
 export type InputProp = {
-  label: string;
+  label?: string;
   type?: string;
   setContent: (value: string) => void;
   config?: InputConfig;
@@ -62,8 +62,8 @@ export interface MultiselectProp<T>
 
 export interface SelectProp<T> extends Omit<InputProp, 'data' | 'setContent'> {
   options: Options<T>;
-  data: T;
-  setContent: (value: string) => void;
+  data?: T | null;
+  setContent: (value: T) => void;
 }
 
 export interface FormErrors {
