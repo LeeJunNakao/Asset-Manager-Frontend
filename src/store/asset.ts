@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Asset, AssetEntry, AssetEntryRequestPayload } from 'entities/asset';
 import deepcopy from 'deepcopy';
-import { toISODate } from 'utils/parser/date';
+import { toISODate, sortByDate } from 'utils/parser/date';
+import AvgPriceCalculator, { Item } from 'utils/parser/avg-price-calculator';
 
 interface State {
   assets: Asset[];
@@ -19,10 +20,7 @@ const sortAssetEntries = (entries: AssetEntryRequestPayload) => {
     ])
     .map(([assetId, assetEntries]) => [
       assetId,
-      (assetEntries as any[]).sort(
-        (a: { date: Date }, b: { date: Date }) =>
-          a.date.getTime() - b.date.getTime()
-      ),
+      (assetEntries as any[]).sort(sortByDate),
     ])
     .map(([assetId, assetEntries]) => [
       assetId,
@@ -101,10 +99,28 @@ export const assetSlice = createSlice({
 
 export const selectAssets = (state: any) => state.asset.assets;
 export const selectAssetsByIds = (assetsIds: Asset['id'][]) => (state: any) =>
-  state.asset.assets.filter((a: Asset) => assetsIds.includes(a.id));
+  (state.asset as State).assets.filter((a: Asset) => assetsIds.includes(a.id));
 export const selectAsset = (state: any) => (id: number) =>
   state.asset.assets.find((i: Asset) => i.id === id);
-export const selectEntries = (state: any) => state.asset.assetEntries;
+export const selectEntries = (state: any) =>
+  (state.asset as State).assetEntries;
+export const selectAssetAvgPrice = (state: any) => {
+  const entries = Object.entries(selectEntries(state))
+    .map(([assetId, entries]): [string, Item[]] => [
+      assetId,
+      entries.map((i) => ({
+        ...i,
+        isPurchase: i.is_purchase,
+        date: new Date(i.date),
+      })),
+    ])
+    .map(([assetId, entries]) => [
+      assetId,
+      new AvgPriceCalculator(entries).calculate(),
+    ]);
+
+  return Object.fromEntries(entries);
+};
 
 export const {
   setAssets,
