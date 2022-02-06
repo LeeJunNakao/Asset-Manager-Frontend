@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { maskCurrency } from 'utils/masks';
 import './styles.scss';
 import { fromRawToFormated } from 'utils/parser/currency';
+import PieChart from 'components/charts/Pie';
 
 function PortfolioDetails() {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function PortfolioDetails() {
       );
       return {
         ...i,
+        rawAvgPrice: averagePrice,
         'avg price': maskCurrency(
           formatedPrice,
           selectedCurrency.decimal,
@@ -40,7 +42,7 @@ function PortfolioDetails() {
       };
     }
 
-    return { ...i, 'avg price': 0 };
+    return { ...i, 'avg price': 0, rawAvgPrice: 0 };
   });
 
   const menu = [
@@ -55,6 +57,14 @@ function PortfolioDetails() {
     navigate(`/asset/${data.id}`);
   };
 
+  const tableData = parsedAssets.map((a) => ({
+    id: a.code,
+    label: a.code,
+    value: a.rawAvgPrice,
+  }));
+
+  console.log('!!!!!!!!!!!!!!!!!', tableData);
+
   return (
     <div id="portfolio-details-page" className="page-wrapper">
       <PageContent text="Porfolio" menu={menu}>
@@ -63,9 +73,12 @@ function PortfolioDetails() {
         </div>
         <Table
           data={parsedAssets}
-          exclude={['id', 'user_id']}
+          exclude={['id', 'user_id', 'rawAvgPrice']}
           onClick={onClick}
         ></Table>
+        <div className="chart-wrapper">
+          <PieChart data={tableData} />
+        </div>
       </PageContent>
     </div>
   );
