@@ -10,6 +10,7 @@ export interface TableProps {
   data: TableData;
   exclude?: String[];
   masks?: Masks;
+  hideIcons?: boolean;
   onDelete?: (data: TableData) => any;
   onEdit?: (data: TableData) => any;
   onClick?: (data: TableData) => any;

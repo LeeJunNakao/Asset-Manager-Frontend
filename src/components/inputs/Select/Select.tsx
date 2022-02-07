@@ -8,6 +8,7 @@ import {
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
+import './styles.scss';
 
 function Select<T>(props: SelectProp<T>) {
   const [selectedValue, setContent] = useState<T | null>(null);
@@ -18,12 +19,9 @@ function Select<T>(props: SelectProp<T>) {
     }
   }, []);
 
-  const selectedLabel =
-    props.options[0] && typeof props.options[0] === 'object'
-      ? (props.options as SelectOption<T>[]).find(
-          (i) => i.value === selectedValue
-        )?.label
-      : selectedValue;
+  const selectedLabel = (props.options as SelectOption<T>[]).find(
+    (i) => i.value === selectedValue
+  )?.label;
 
   const handleChange = (event: any) => {
     const {
@@ -34,11 +32,11 @@ function Select<T>(props: SelectProp<T>) {
   };
 
   return (
-    <div className="input-component-wrapper">
-      <span> {props.label} </span>
+    <div className="input-component-wrapper select-component">
+      <span>{props.label}</span>
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
-          value={selectedValue || ''}
+          value={selectedLabel}
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

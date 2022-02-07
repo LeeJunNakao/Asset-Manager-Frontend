@@ -5,15 +5,14 @@
 
 #portfolio-details-page {
   .table-component {
-    svg {
-      display: none;
+    .header-item:nth-child(n + 3),
+    .table-row > .row-data:nth-child(n + 3) {
+      display: flex;
+      justify-content: flex-end;
     }
 
     .header-item:nth-child(3),
-    .header-item:nth-child(4),
-    .table-row > .row-data:nth-child(3),
-    .table-row > .row-data:nth-child(4) {
-      display: flex;
+    .table-row > .row-data:nth-child(3) {
       justify-content: center;
     }
   }

@@ -3,3 +3,12 @@
 .asset-info {
   @include info-tag;
 }
+
+.asset-footer {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+  justify-content: flex-end;
+  font-size: 15px;
+}

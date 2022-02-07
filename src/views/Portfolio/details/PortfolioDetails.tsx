@@ -42,6 +42,7 @@ function PortfolioDetails() {
       );
       return {
         ...i,
+        total: quantity,
         rawAvgPrice: averagePrice,
         'average price': maskCurrency(
           formatedPrice,
@@ -49,11 +50,10 @@ function PortfolioDetails() {
           selectedCurrency.code
         ),
         'current price': maskCurrency(
-          getPrice(i.code),
+          getPrice(i.code) || 0,
           selectedCurrency.decimal,
           selectedCurrency.code
         ),
-        total: quantity,
       };
     }
 
@@ -88,6 +88,7 @@ function PortfolioDetails() {
           data={parsedAssets}
           exclude={['id', 'user_id', 'rawAvgPrice']}
           onClick={onClick}
+          hideIcons
         ></Table>
         <div className="chart-wrapper">
           <PieChart data={chartData} title="Current allocation" />

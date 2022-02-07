@@ -8,13 +8,19 @@ import {
   editAssetEntry,
   deleteAssetEntry,
 } from 'http-services/asset/asset-entry';
-import { addAssetEntry, updateAssetEntry, removeAssetEntry } from 'store/asset';
-import { selectAsset } from 'store/asset';
-import { selectCurrencies } from 'store/currency';
+import {
+  addAssetEntry,
+  updateAssetEntry,
+  removeAssetEntry,
+  getAssetQuantity,
+} from 'store/asset';
+import { selectAsset, getAssetAvgPrice } from 'store/asset';
+import { selectCurrencies, getSelectedCurrency } from 'store/currency';
 import { useNavigate } from 'react-router-dom';
 import { IoCaretBackSharp } from 'react-icons/io5';
 import { AssetEntry as Entry } from 'entities/asset';
 import { maskCurrency } from 'utils/masks';
+import { fromRawToFormated } from 'utils/parser/currency';
 import { TableData } from 'components/table/protocols';
 import './style.scss';
 
@@ -24,6 +30,10 @@ function AssetEntry() {
   const currencies = useSelector(selectCurrencies);
 
   const navigate = useNavigate();
+
+  const getQuantity = useSelector(getAssetQuantity);
+  const getPrice = useSelector(getAssetAvgPrice);
+  const selectedCurrency = useSelector(getSelectedCurrency);
 
   const selectAssetEntries = (assetId: string) => (state: any) =>
     (state.asset.assetEntries[assetId] || []).map((entry: Entry) => {
@@ -176,7 +186,21 @@ function AssetEntry() {
     },
   });
 
+  const assetQuantity = selectedCurrency
+    ? getQuantity(asset.id, selectedCurrency.id)
+    : 0;
+  const assetPrice = selectedCurrency
+    ? getPrice(asset.id, selectedCurrency.id)
+    : 0;
+  const parsedTotal = selectedCurrency
+    ? maskCurrency(
+        fromRawToFormated(assetQuantity * assetPrice, selectedCurrency.decimal),
+        selectedCurrency.decimal,
+        selectedCurrency.code
+      )
+    : 0;
   return Page({
+    menu,
     upperChildren: (
       <div className="asset-info">
         <span>
@@ -184,7 +208,12 @@ function AssetEntry() {
         </span>
       </div>
     ),
-    menu,
+    lowerChildren: (
+      <div className="asset-info asset-footer">
+        <span>TOTAL</span>
+        <span>{parsedTotal}</span>
+      </div>
+    ),
   });
 }
 

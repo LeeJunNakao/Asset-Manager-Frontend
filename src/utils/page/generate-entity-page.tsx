@@ -37,8 +37,9 @@ type GenerateConfig = {
 };
 
 type Props = {
-  upperChildren?: JSX.Element;
   menu?: MenuItem[];
+  upperChildren?: JSX.Element;
+  lowerChildren?: JSX.Element;
 };
 
 export function generatePage(config: GenerateConfig) {
@@ -159,6 +160,7 @@ export function generatePage(config: GenerateConfig) {
           ) : (
             Forms
           )}
+          {props?.lowerChildren}
         </PageContent>
       </div>
     );

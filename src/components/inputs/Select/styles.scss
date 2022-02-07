@@ -1,0 +1,14 @@
+.MuiSelect-select {
+  padding: 0 !important;
+  height: 30px !important;
+  display: flex;
+  align-items: center;
+
+  .MuiBox-root {
+    width: 100%;
+    padding-left: 14px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+}

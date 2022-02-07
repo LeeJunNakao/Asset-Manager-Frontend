@@ -39,9 +39,11 @@ function App() {
       const response = await getAsset();
       dispatch(setAssets(response));
 
-      response.forEach((asset: any) => {
-        fetchAssetsPrice(asset.code);
-      });
+      const promises = response.map((asset: any) =>
+        fetchAssetsPrice(asset.code)
+      );
+
+      await Promise.all(promises);
     };
 
     const fetchCurrency = async () => {

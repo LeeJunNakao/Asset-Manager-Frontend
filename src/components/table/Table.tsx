@@ -25,7 +25,9 @@ export default function Table(props: TableProps) {
     : [];
 
   const componentStyle = {
-    gridTemplateColumns: `${'1fr '.repeat(header.length)} 40px`,
+    gridTemplateColumns: props.hideIcons
+      ? `${'1fr '.repeat(header.length)}`
+      : `${'1fr '.repeat(header.length)} 40px`,
   } as React.CSSProperties;
 
   const handleDelete = (item: TableData) => {
@@ -61,15 +63,17 @@ export default function Table(props: TableProps) {
       key={uuidv4()}
     >
       {headerData.map(formatRowItem(props, item))}
-      <div className="actions">
-        {DeleteIcons(item)}
-        {(!deletingItem || !(deletingItem?.id === item.id)) && (
-          <MdModeEditOutline
-            className="icon"
-            onClick={() => props.onEdit && props.onEdit(item)}
-          />
-        )}
-      </div>
+      {!props.hideIcons && (
+        <div className="actions">
+          {DeleteIcons(item)}
+          {(!deletingItem || !(deletingItem?.id === item.id)) && (
+            <MdModeEditOutline
+              className="icon"
+              onClick={() => props.onEdit && props.onEdit(item)}
+            />
+          )}
+        </div>
+      )}
     </div>
   ));
 
