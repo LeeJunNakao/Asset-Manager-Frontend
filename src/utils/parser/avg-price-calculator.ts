@@ -42,11 +42,13 @@ export class AvgPriceCalculator {
 
   private reduceSoldItems(boughtItems: Item[], totalSold: number): Item[] {
     const [currBought, ...restBought] = boughtItems;
-    const currBalance = currBought.quantity + totalSold;
-    if (currBalance < 0) {
+    const currBalance = (currBought?.quantity || 0) + totalSold;
+
+    if (!currBalance) return restBought;
+    if (restBought.length && currBalance < 0) {
       return this.reduceSoldItems(restBought, currBalance);
     }
-    if (!currBalance) return restBought;
+
     return [{ ...currBought, quantity: currBalance }, ...restBought];
   }
 

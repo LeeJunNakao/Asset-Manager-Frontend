@@ -190,7 +190,7 @@ function AssetEntry() {
     ? getQuantity(asset.id, selectedCurrency.id)
     : 0;
   const assetPrice = selectedCurrency
-    ? getPrice(asset.id, selectedCurrency.id)
+    ? getPrice(asset.id, selectedCurrency.id) || 0
     : 0;
   const parsedTotal = selectedCurrency
     ? maskCurrency(
@@ -199,6 +199,7 @@ function AssetEntry() {
         selectedCurrency.code
       )
     : 0;
+
   return Page({
     menu,
     upperChildren: (

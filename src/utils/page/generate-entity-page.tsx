@@ -14,6 +14,7 @@ import {
   InputConfigProp,
 } from 'components/form/FormBuilder/protocols';
 import { Masks } from 'components/table/protocols';
+import './styles.scss';
 
 type GenerateConfig = {
   title: string;
@@ -140,14 +141,16 @@ export function generatePage(config: GenerateConfig) {
         />
       ) : (
         mode === 'list' && (
-          <Table
-            data={items as Payload}
-            onEdit={handleEdit}
-            onDelete={onDelete}
-            onClick={config.table?.onClick}
-            exclude={config.table?.exclude || ['id', 'user_id']}
-            masks={config.table?.masks}
-          />
+          <div className="table-container">
+            <Table
+              data={items as Payload}
+              onEdit={handleEdit}
+              onDelete={onDelete}
+              onClick={config.table?.onClick}
+              exclude={config.table?.exclude || ['id', 'user_id']}
+              masks={config.table?.masks}
+            />
+          </div>
         )
       );
 

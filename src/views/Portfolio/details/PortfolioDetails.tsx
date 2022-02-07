@@ -72,11 +72,13 @@ function PortfolioDetails() {
     navigate(`/asset/${data.id}`);
   };
 
-  const chartData = parsedAssets.map((a) => ({
-    id: a.code,
-    label: a.code,
-    value: a.total * getPrice(a.code),
-  }));
+  const chartData = parsedAssets
+    .map((a) => ({
+      id: a.code,
+      label: a.code,
+      value: a.total * getPrice(a.code),
+    }))
+    .filter((item) => item.value);
 
   return (
     <div id="portfolio-details-page" className="page-wrapper">
@@ -90,9 +92,11 @@ function PortfolioDetails() {
           onClick={onClick}
           hideIcons
         ></Table>
-        <div className="chart-wrapper">
-          <PieChart data={chartData} title="Current allocation" />
-        </div>
+        {chartData.length !== 0 && (
+          <div className="chart-wrapper">
+            <PieChart data={chartData} title="Current allocation" />
+          </div>
+        )}
       </PageContent>
     </div>
   );

@@ -132,7 +132,8 @@ export const getGroupedEntries = (state: any): GroupedData<GroupedEntries> => {
 export const getAssetAvgPrice =
   (state: any) =>
   (assetId: Asset['id'], currencyId: Currency['id']): number => {
-    const entries = getGroupedEntries(state)[assetId][currencyId] || [];
+    const groupedAssets = getGroupedEntries(state)[assetId];
+    const entries = (groupedAssets && groupedAssets[currencyId]) || [];
     const parsedEntries = entries.map((e) => ({
       ...e,
       date: new Date(e.date),
@@ -143,7 +144,8 @@ export const getAssetAvgPrice =
 export const getAssetQuantity =
   (state: any) =>
   (assetId: Asset['id'], currencyId: Currency['id']): number => {
-    const entries = getGroupedEntries(state)[assetId][currencyId] || [];
+    const groupedAssets = getGroupedEntries(state)[assetId];
+    const entries = (groupedAssets && groupedAssets[currencyId]) || [];
     const sumResult = entries.reduce((acc, curr) => {
       const parseQuantity = curr.is_purchase ? curr.quantity : -curr.quantity;
       return acc + parseQuantity;

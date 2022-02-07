@@ -25,7 +25,11 @@ function Datepicker(props: InputProp) {
   return (
     <div className="input-component-wrapper">
       <span> {props.label} </span>
-      <ReactDatepicker selected={content} onChange={onChange} />
+      <ReactDatepicker
+        selected={content}
+        onChange={onChange}
+        showYearDropdown
+      />
       <span className="message-error">{props.errorMessage}</span>
     </div>
   );

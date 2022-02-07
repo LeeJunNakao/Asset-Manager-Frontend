@@ -82,7 +82,7 @@ export default function Table(props: TableProps) {
       <div className="table-row header" style={componentStyle}>
         {header}
       </div>
-      {items}
+      <div className="table-content">{items}</div>
     </div>
   );
 }
