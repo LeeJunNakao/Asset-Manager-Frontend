@@ -4,20 +4,20 @@ import deepcopy from 'deepcopy';
 import { toISODate, sortByDate } from 'utils/parser/date';
 import AvgPriceCalculator, { Item } from 'utils/parser/avg-price-calculator';
 import { groupBy } from 'utils/parser/array';
+import { Currency } from 'entities/currency';
 
-interface State {
+type State = {
   assets: Asset[];
   assetEntries: AssetEntryRequestPayload;
-}
-
+  assetsCurrentPrice: {
+    [assetId: Asset['code']]: number;
+  };
+};
 type GroupedEntries = {
-  [currencyId: string | number]: Item[];
+  [currencyId: string | number]: AssetEntry[];
 };
-type AveragePrice = {
-  [currencyId: number]: number;
-};
-type GroupedAveragedPrice = {
-  [assetId: string]: AveragePrice;
+type GroupedData<T> = {
+  [assetId: string]: T;
 };
 
 const sortAssetEntries = (entries: AssetEntryRequestPayload) => {
@@ -49,6 +49,7 @@ export const assetSlice = createSlice({
   initialState: {
     assets: [],
     assetEntries: {},
+    assetsCurrentPrice: {},
   } as State,
   reducers: {
     setAssets: (state, action) => {
@@ -74,6 +75,9 @@ export const assetSlice = createSlice({
       assets.splice(index, 1);
 
       state.assets = assets;
+    },
+    addAssetCurrentPrice: (state, action) => {
+      state.assetsCurrentPrice[action.payload.code] = action.payload.price;
     },
     setAssetEntries: (state, action) => {
       const entries: AssetEntryRequestPayload = deepcopy(action.payload);
@@ -113,56 +117,51 @@ export const selectAssetsByIds = (assetsIds: Asset['id'][]) => (state: any) =>
   (state.asset as State).assets.filter((a: Asset) => assetsIds.includes(a.id));
 export const selectAsset = (state: any) => (id: number) =>
   state.asset.assets.find((i: Asset) => i.id === id);
-export const selectEntries = (state: any) =>
+export const selectEntries = (state: any): AssetEntryRequestPayload =>
   (state.asset as State).assetEntries;
-export const selectAssetAvgPrice = (state: any): GroupedAveragedPrice => {
-  const formatEntries = ([assetId, entries]: [string, AssetEntry[]]): [
-    string,
-    Item[]
-  ] => [
+export const getGroupedEntries = (state: any): GroupedData<GroupedEntries> => {
+  const entries = selectEntries(state);
+
+  const groupedEntries = Object.entries(entries).map(([assetId, entries]) => [
     assetId,
-    entries.map((i) => ({
-      ...i,
-      isPurchase: i.is_purchase,
-      date: new Date(i.date),
-    })),
-  ];
+    groupBy(entries, 'currency_id'),
+  ]);
 
-  const groupEntries = ([assetId, entries]: [string, Item[]]): [
-    string,
-    GroupedEntries
-  ] => {
-    const parsedEntries = groupBy(entries, 'currency_id') as GroupedEntries;
-    return [assetId, parsedEntries];
-  };
-
-  const groupAveragePrices = ([assetId, groupedEntries]: [
-    string,
-    GroupedEntries
-  ]): [string, AveragePrice] => {
-    const avgPriced = Object.entries(groupedEntries).map(
-      ([currencyId, items]) => [
-        currencyId,
-        new AvgPriceCalculator(items).calculate(),
-      ]
-    );
-    return [assetId, Object.fromEntries(avgPriced)];
-  };
-
-  const entries = Object.entries(selectEntries(state))
-    .map(formatEntries)
-    .map(groupEntries)
-    .map(groupAveragePrices);
-
-  const averagePrices: GroupedAveragedPrice = Object.fromEntries(entries);
-  return averagePrices;
+  return Object.fromEntries(groupedEntries);
 };
+export const getAssetAvgPrice =
+  (state: any) =>
+  (assetId: Asset['id'], currencyId: Currency['id']): number => {
+    const entries = getGroupedEntries(state)[assetId][currencyId] || [];
+    const parsedEntries = entries.map((e) => ({
+      ...e,
+      date: new Date(e.date),
+      isPurchase: e.is_purchase,
+    })) as Item[];
+    return new AvgPriceCalculator(parsedEntries).calculate();
+  };
+export const getAssetQuantity =
+  (state: any) =>
+  (assetId: Asset['id'], currencyId: Currency['id']): number => {
+    const entries = getGroupedEntries(state)[assetId][currencyId] || [];
+    const sumResult = entries.reduce((acc, curr) => {
+      const parseQuantity = curr.is_purchase ? curr.quantity : -curr.quantity;
+      return acc + parseQuantity;
+    }, 0);
+
+    return sumResult;
+  };
+export const getAssetCurrentPrice =
+  (state: any) => (assetCode: Asset['code']) => {
+    return (state.asset as State).assetsCurrentPrice[assetCode];
+  };
 
 export const {
   setAssets,
   updateAsset,
   addAsset,
   removeAsset,
+  addAssetCurrentPrice,
   setAssetEntries,
   addAssetEntry,
   updateAssetEntry,

@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from 'store/store';
 import App from './views/App/App';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './types/reportWebVitals';
 import { setInterceptor } from 'http-services/interceptors';
 import { client } from 'http-services/client';
 

@@ -9,6 +9,7 @@ type Data = {
 };
 type Props = {
   data: Data[];
+  title?: string;
 };
 
 function PieChart(props: Props) {
@@ -16,6 +17,11 @@ function PieChart(props: Props) {
 
   return (
     <div className="pie-chart-wrapper">
+      {props.title && (
+        <div className="pie-chart-title">
+          <span>{props.title}</span>
+        </div>
+      )}
       <ResponsivePie
         data={props.data}
         innerRadius={0.5}

@@ -14,9 +14,10 @@ import { getAsset } from 'http-services/asset';
 import { getCurrency } from 'http-services/currency';
 import { getPortfolio } from 'http-services/portfolio';
 import { getAssetEntry } from 'http-services/asset/asset-entry';
-import { setAssetEntries, setAssets } from 'store/asset';
+import { setAssetEntries, setAssets, addAssetCurrentPrice } from 'store/asset';
 import { setCurrencies, setSelectedCurrency } from 'store/currency';
 import { setPortfolios } from 'store/portfolio';
+import { getPrice } from 'http-services/asset/consult-asset-price';
 import PageLoading from 'components/page-loading/PageLoading';
 
 function App() {
@@ -25,9 +26,22 @@ function App() {
   const authenticated = useSelector((state: any) => state.auth.authenticated);
 
   const requestData = async () => {
+    const fetchAssetsPrice = async (assetCode: string) => {
+      try {
+        const price = await getPrice(assetCode);
+        dispatch(addAssetCurrentPrice({ code: assetCode, price }));
+      } catch (error) {
+        dispatch(addAssetCurrentPrice({ code: assetCode, price: null }));
+      }
+    };
+
     const fetchAssets = async () => {
       const response = await getAsset();
       dispatch(setAssets(response));
+
+      response.forEach((asset: any) => {
+        fetchAssetsPrice(asset.code);
+      });
     };
 
     const fetchCurrency = async () => {

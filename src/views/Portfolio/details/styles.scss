@@ -8,6 +8,14 @@
     svg {
       display: none;
     }
+
+    .header-item:nth-child(3),
+    .header-item:nth-child(4),
+    .table-row > .row-data:nth-child(3),
+    .table-row > .row-data:nth-child(4) {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   .chart-wrapper {
