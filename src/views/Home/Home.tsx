@@ -21,7 +21,6 @@ function Home() {
     value: currency,
     label: currency.code,
   }));
-
   const selectCurrency = (currency: Currency) => {
     dispatch(setSelectedCurrency(currency));
   };

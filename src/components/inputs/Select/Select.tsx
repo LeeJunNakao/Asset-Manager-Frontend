@@ -19,9 +19,12 @@ function Select<T>(props: SelectProp<T>) {
     }
   }, []);
 
-  const selectedLabel = (props.options as SelectOption<T>[]).find(
-    (i) => i.value === selectedValue
-  )?.label;
+  const selectedLabel =
+    props.options[0] && typeof props.options[0] === 'object'
+      ? (props.options as SelectOption<T>[]).find(
+          (i) => i.value === selectedValue
+        )?.label
+      : selectedValue;
 
   const handleChange = (event: any) => {
     const {
@@ -32,11 +35,11 @@ function Select<T>(props: SelectProp<T>) {
   };
 
   return (
-    <div className="input-component-wrapper select-component">
-      <span>{props.label}</span>
+    <div className="input-component-wrapper">
+      <span> {props.label} </span>
       <FormControl sx={{ width: '100%' }}>
         <MaterialSelect
-          value={selectedLabel}
+          value={selectedValue || {}}
           onChange={handleChange}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
