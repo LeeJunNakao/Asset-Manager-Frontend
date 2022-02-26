@@ -57,7 +57,7 @@ function PortfolioDetails() {
       };
     }
 
-    return { ...i, 'avg price': 0, rawAvgPrice: 0, total: 0 };
+    return { ...i, 'average price': 0, rawAvgPrice: 0, total: 0 };
   });
 
   const menu = [
@@ -80,6 +80,14 @@ function PortfolioDetails() {
     }))
     .filter((item) => item.value);
 
+  const chartPurchaseData = parsedAssets
+    .map((a) => ({
+      id: a.code,
+      label: a.code,
+      value: a.total * (Number(a.rawAvgPrice) || 0),
+    }))
+    .filter((item) => item.value);
+
   return (
     <div id="portfolio-details-page" className="page-wrapper">
       <PageContent text="Porfolio" menu={menu}>
@@ -92,11 +100,18 @@ function PortfolioDetails() {
           onClick={onClick}
           hideIcons
         ></Table>
-        {chartData.length !== 0 && (
-          <div className="chart-wrapper">
-            <PieChart data={chartData} title="Current allocation" />
-          </div>
-        )}
+        <div className="charts">
+          {chartPurchaseData.length !== 0 && (
+            <div className="chart-wrapper">
+              <PieChart data={chartPurchaseData} title="Purchase allocation" />
+            </div>
+          )}
+          {chartData.length !== 0 && (
+            <div className="chart-wrapper">
+              <PieChart data={chartData} title="Current allocation" />
+            </div>
+          )}
+        </div>
       </PageContent>
     </div>
   );

@@ -26,17 +26,7 @@ function Select<T>(props: MultiselectProp<T>) {
 
       return item?.label;
     });
-    //
-    /*
-export type SelectOption<T> = {
-  value: T;
-  label: string;
-};
-type Options<T> = Array<SelectOption<T>>;
-setContent: (value: Options<T>) => void;
 
-type MultiselectData<T> = Set<T>;
-*/
     setSelectedLabels(labels as string[]);
     props.setContent(Array.from(selectedValues));
   }, [selectedValues]);

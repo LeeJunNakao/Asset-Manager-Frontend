@@ -1,0 +1,7 @@
+.asset-page {
+  .header-item:nth-child(3),
+  .table-row > .row-data:nth-child(3) {
+    display: flex;
+    justify-content: center;
+  }
+}

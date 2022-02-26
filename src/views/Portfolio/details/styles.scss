@@ -20,4 +20,13 @@
   .chart-wrapper {
     margin-top: 40px;
   }
+
+  .charts {
+    display: flex;
+    justify-content: center;
+
+    .chart-wrapper {
+      width: 45%;
+    }
+  }
 }

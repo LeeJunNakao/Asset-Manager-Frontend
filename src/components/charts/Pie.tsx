@@ -41,6 +41,8 @@ function PieChart(props: Props) {
           from: 'color',
           modifiers: [['darker', 2]],
         }}
+        arcLinkLabelsDiagonalLength={6}
+        arcLinkLabelsStraightLength={0}
       />
     </div>
   );
